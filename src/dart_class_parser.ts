@@ -584,4 +584,6 @@ class DartClassField {
   }
 }
 
-parseTextToClass(input);
+export {
+  doesLookingFurtherMakeSense
+};
