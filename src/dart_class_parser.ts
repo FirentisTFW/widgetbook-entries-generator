@@ -584,8 +584,4 @@ class DartClassField {
   }
 }
 
-export function add(): number {
-  return 2;
-}
-
 parseTextToClass(input);
