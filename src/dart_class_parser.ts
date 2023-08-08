@@ -510,8 +510,6 @@ function parseLinesToConstructors(lines: Array<string>, className: string, class
 }
 
 function parseLinesToConstructor(lines: Array<string>, className: string, classFields: Array<DartClassField>): DartClassConstructor {
-  // FIXME Constructor can accept some fields that are not class fields
-
   const thiss = 'this.';
 
   let constructorName: string | null = null;
