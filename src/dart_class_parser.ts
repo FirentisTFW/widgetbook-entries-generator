@@ -167,4 +167,4 @@ class DartClassField {
   }
 }
 
-export { doesLookingFurtherMakeSense, parseLinesToClassName };
+export { DartClassField, doesLookingFurtherMakeSense, parseLinesToClassFields, parseLinesToClassName };

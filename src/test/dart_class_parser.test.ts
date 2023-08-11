@@ -1,4 +1,9 @@
-import { doesLookingFurtherMakeSense, parseLinesToClassName } from "../dart_class_parser";
+import {
+  DartClassField,
+  doesLookingFurtherMakeSense,
+  parseLinesToClassFields,
+  parseLinesToClassName,
+} from "../dart_class_parser";
 
 describe("doesLookingFurtherMakeSense", () => {
   test("when passed a line which is build() method signature, returns false ", () => {
@@ -37,18 +42,250 @@ describe("parseLinesToClassName", () => {
     expect(parseLinesToClassName(lines)).toBe("");
   });
 
-  test("when passed lines which contain class name declaration in one line, returns properly class name", () => {
+  test("when passed lines which contain class name declaration in one line, returns class name", () => {
     const lines = ["class MyWidget extends StatefulWidget {"];
 
     expect(parseLinesToClassName(lines)).toBe("MyWidget");
   });
 
-  test("when passed lines which contain class name declaration in multiple lines, along with mixin, returns properly class name", () => {
+  test("when passed lines which contain class name declaration in multiple lines, along with mixin, returns class name", () => {
     const lines = [
       "class ClassWithVeryLongNameThatWouldNotFitInOneLineBecauseItsTooLong",
       "   extends StatefulWidget with GreatWidgetMixin {",
     ];
 
     expect(parseLinesToClassName(lines)).toBe("ClassWithVeryLongNameThatWouldNotFitInOneLineBecauseItsTooLong");
+  });
+});
+
+describe("parseLinesToClassFields", () => {
+  test("when passed empty array, returns an empty array", () => {
+    expect(parseLinesToClassFields([])).toEqual([]);
+  });
+
+  test("when passed single final field with correct indent, returns it", () => {
+    const lines = ["  final String name;"];
+
+    expect(parseLinesToClassFields(lines)).toEqual([new DartClassField("name", "String")]);
+  });
+
+  test("when passed multiple final fields with correct indents, returns them", () => {
+    const lines = ["  final String name;", "  final int age;", "  final Gender gender;"];
+
+    expect(parseLinesToClassFields(lines)).toEqual([
+      new DartClassField("name", "String"),
+      new DartClassField("age", "int"),
+      new DartClassField("gender", "Gender"),
+    ]);
+  });
+
+  test("when passed a single line which is not a class field, returns an empty arrays", () => {
+    const lines = ["Widget build(BuildContext context) {"];
+
+    expect(parseLinesToClassFields(lines)).toEqual([]);
+  });
+
+  test("when passed multiple lines which are not class fields, returns an empty arrays", () => {
+    const lines = [
+      "@override",
+      "Widget build(BuildContext context) {",
+      "  return IconButton(",
+      "    icon: Icons.arrowLeft,",
+      "    semanticsLabel: context.l10n.back,",
+      "    onTap: context.pop,",
+      "  );",
+      "}",
+    ];
+
+    expect(parseLinesToClassFields(lines)).toEqual([]);
+  });
+
+  test("when passed multiple final fields, some with not correct indents (so no class fields) and some with correct indents, returns fields with correct indents", () => {
+    const lines = ["final String name;", "final int age;", "  final String nameCorrect;", "  final int ageCorrect;"];
+
+    expect(parseLinesToClassFields(lines)).toEqual([
+      new DartClassField("nameCorrect", "String"),
+      new DartClassField("ageCorrect", "int"),
+    ]);
+  });
+
+  describe("when passed a StatelessWidget", () => {
+    test("with fields after constructor, returns them", () => {
+      const lines = [
+        "class Button extends StatelessWidget {",
+        "  const Button({",
+        "    super.key,",
+        "    required this.title,",
+        "    required this.type,",
+        "    required this.onTap,",
+        "  });",
+        "",
+        "  final String title;",
+        "  final ButtonType type;",
+        "  final VoidCallback onTap;",
+        "",
+        "  @override",
+        "  Widget build(BuildContext context) {",
+        "    return const SizedBox.shrink();",
+        "  }",
+        "}",
+      ];
+
+      expect(parseLinesToClassFields(lines)).toEqual([
+        new DartClassField("title", "String"),
+        new DartClassField("type", "ButtonType"),
+        new DartClassField("onTap", "VoidCallback"),
+      ]);
+    });
+
+    test("with fields before constructor, returns them", () => {
+      const lines = [
+        "class Button extends StatelessWidget {",
+        "  final String title;",
+        "  final ButtonType type;",
+        "  final VoidCallback onTap;",
+        "",
+        "  const Button({",
+        "    super.key,",
+        "    required this.title,",
+        "    required this.type,",
+        "    required this.onTap,",
+        "  });",
+        "",
+        "  @override",
+        "  Widget build(BuildContext context) {",
+        "    return const SizedBox.shrink();",
+        "  }",
+        "}",
+      ];
+
+      expect(parseLinesToClassFields(lines)).toEqual([
+        new DartClassField("title", "String"),
+        new DartClassField("type", "ButtonType"),
+        new DartClassField("onTap", "VoidCallback"),
+      ]);
+    });
+
+    test("with no fields, returns an empty array", () => {
+      const lines = [
+        "class Button extends StatelessWidget {",
+        "  const Button({super.key});",
+        "",
+        "  @override",
+        "  Widget build(BuildContext context) {",
+        "    return const SizedBox.shrink();",
+        "  }",
+        "}",
+      ];
+
+      expect(parseLinesToClassFields(lines)).toEqual([]);
+    });
+  });
+  describe("when passed a StatefulWidget", () => {
+    test("with fields after constructor, returns them", () => {
+      const lines = [
+        "class Button extends StatefulWidget {",
+        "  const Button({",
+        "    super.key,",
+        "    required this.title,",
+        "    required this.type,",
+        "    required this.onTap,",
+        "  });",
+        "",
+        "  final String title;",
+        "  final ButtonType type;",
+        "  final VoidCallback onTap;",
+        "",
+        "@override",
+        "State<Button> createState() => _ButtonState();",
+        "}",
+      ];
+
+      expect(parseLinesToClassFields(lines)).toEqual([
+        new DartClassField("title", "String"),
+        new DartClassField("type", "ButtonType"),
+        new DartClassField("onTap", "VoidCallback"),
+      ]);
+    });
+
+    test("with fields before constructor, returns them", () => {
+      const lines = [
+        "class Button extends StatefulWidget {",
+        "  final String title;",
+        "  final ButtonType type;",
+        "  final VoidCallback onTap;",
+        "",
+        "  const Button({",
+        "    super.key,",
+        "    required this.title,",
+        "    required this.type,",
+        "    required this.onTap,",
+        "  });",
+        "",
+        "@override",
+        "State<Button> createState() => _ButtonState();",
+        "}",
+      ];
+
+      expect(parseLinesToClassFields(lines)).toEqual([
+        new DartClassField("title", "String"),
+        new DartClassField("type", "ButtonType"),
+        new DartClassField("onTap", "VoidCallback"),
+      ]);
+    });
+
+    test("with no fields, returns an empty array", () => {
+      const lines = [
+        "class Button extends StatefulWidget {",
+        "  const Button({super.key});",
+        "",
+        "@override",
+        "State<Button> createState() => _ButtonState();",
+        "}",
+      ];
+
+      expect(parseLinesToClassFields(lines)).toEqual([]);
+    });
+  });
+
+  test("when passed two widgets with fields, returns only fields from the first widget", () => {
+    const lines = [
+      "class FirstWidget extends StatelessWidget {",
+      "  const FirstWidget({",
+      "    super.key,",
+      "    required this.title1,",
+      "    required this.onTap1,",
+      "  });",
+      "",
+      "  final String title1;",
+      "  final VoidCallback onTap1;",
+      "",
+      "  @override",
+      "  Widget build(BuildContext context) {",
+      "    return const SizedBox.shrink();",
+      "  }",
+      "}",
+      "",
+      "class SecondWidget extends StatelessWidget {",
+      "  const SecondWidget({",
+      "    super.key,",
+      "    required this.title2,",
+      "    required this.onTap2,",
+      "  });",
+      "",
+      "  final String title2;",
+      "  final VoidCallback onTap2;",
+      "",
+      "  @override",
+      "  Widget build(BuildContext context) {",
+      "    return const SizedBox.shrink();",
+      "  }",
+      "}",
+    ];
+
+    expect(parseLinesToClassFields(lines)).toEqual([
+      new DartClassField("title1", "String"),
+      new DartClassField("onTap1", "VoidCallback"),
+    ]);
   });
 });
