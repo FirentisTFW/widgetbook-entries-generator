@@ -86,7 +86,7 @@ function parseLinesToConstructors(
 }
 
 function isConstructorLine(line: string, className: string): boolean {
-  return line.includes(`${className}({`) || (line.includes(`${className}.`) && line.includes("({"));
+  return line.includes(`${className}(`) || (line.includes(`${className}.`) && line.includes("("));
 }
 
 function parseLinesToConstructor(
