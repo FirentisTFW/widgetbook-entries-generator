@@ -1,6 +1,7 @@
 import {
   DartClassField,
   doesLookingFurtherMakeSense,
+  isConstructorLine,
   parseLinesToClassFields,
   parseLinesToClassName,
 } from "../dart_class_parser";
@@ -287,5 +288,29 @@ describe("parseLinesToClassFields", () => {
       new DartClassField("title1", "String"),
       new DartClassField("onTap1", "VoidCallback"),
     ]);
+  });
+});
+
+describe("isConstructorLine", () => {
+  describe("constructor with named parameters", () => {
+    test("when passed an empty line, returns false", () => {
+      expect(isConstructorLine("", "Loader")).toBe(false);
+    });
+
+    test("when passed a regular constructor declaration, returns true", () => {
+      expect(isConstructorLine("Loader({", "Loader")).toBe(true);
+    });
+
+    test("when passed a named constructor declaration, returns true", () => {
+      expect(isConstructorLine("Loader.named({", "Loader")).toBe(true);
+    });
+
+    test("when passed other class' regular constructor declaration that starts with desired class' name, returns false", () => {
+      expect(isConstructorLine("LoaderButDifferent({", "Loader")).toBe(false);
+    });
+
+    test("when passed other class' named constructor declaration that starts with desired class' name, returns false", () => {
+      expect(isConstructorLine("LoaderButDifferent.named({", "Loader")).toBe(false);
+    });
   });
 });
