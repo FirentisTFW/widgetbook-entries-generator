@@ -292,11 +292,15 @@ describe("parseLinesToClassFields", () => {
 });
 
 describe("isConstructorLine", () => {
-  describe("constructor with named parameters", () => {
-    test("when passed an empty line, returns false", () => {
-      expect(isConstructorLine("", "Loader")).toBe(false);
-    });
+  test("when passed an empty line, returns false", () => {
+    expect(isConstructorLine("", "Loader")).toBe(false);
+  });
 
+  test("when passed a empty line which contains class name and parenthesis, returns false", () => {
+    expect(isConstructorLine("void foo(Loader bar) {", "Loader")).toBe(false);
+  });
+
+  describe("constructor only with named parameters", () => {
     test("when passed a regular constructor declaration, returns true", () => {
       expect(isConstructorLine("Loader({", "Loader")).toBe(true);
     });
@@ -311,6 +315,24 @@ describe("isConstructorLine", () => {
 
     test("when passed other class' named constructor declaration that starts with desired class' name, returns false", () => {
       expect(isConstructorLine("LoaderButDifferent.named({", "Loader")).toBe(false);
+    });
+  });
+
+  describe("constructor with positional parameters", () => {
+    test("when passed a regular constructor declaration, returns true", () => {
+      expect(isConstructorLine("Loader(", "Loader")).toBe(true);
+    });
+
+    test("when passed a named constructor declaration, returns true", () => {
+      expect(isConstructorLine("Loader.named(", "Loader")).toBe(true);
+    });
+
+    test("when passed other class' regular constructor declaration that starts with desired class' name, returns false", () => {
+      expect(isConstructorLine("LoaderButDifferent(", "Loader")).toBe(false);
+    });
+
+    test("when passed other class' named constructor declaration that starts with desired class' name, returns false", () => {
+      expect(isConstructorLine("LoaderButDifferent.named(", "Loader")).toBe(false);
     });
   });
 });
