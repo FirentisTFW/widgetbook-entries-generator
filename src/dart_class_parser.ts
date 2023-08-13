@@ -64,8 +64,7 @@ function parseLinesToConstructors(
       break;
     }
 
-    const isConstructorLine = line.includes(`${className}({`) || (line.includes(`${className}`) && line.includes("({"));
-    if (!isConstructorLine) {
+    if (!isConstructorLine(line, className)) {
       i++;
       continue;
     }
@@ -84,6 +83,10 @@ function parseLinesToConstructors(
   }
 
   return constructors;
+}
+
+function isConstructorLine(line: string, className: string): boolean {
+  return line.includes(`${className}({`) || (line.includes(`${className}.`) && line.includes("({"));
 }
 
 function parseLinesToConstructor(
@@ -167,4 +170,10 @@ class DartClassField {
   }
 }
 
-export { DartClassField, doesLookingFurtherMakeSense, parseLinesToClassFields, parseLinesToClassName };
+export {
+  DartClassField,
+  doesLookingFurtherMakeSense,
+  isConstructorLine,
+  parseLinesToClassFields,
+  parseLinesToClassName,
+};
