@@ -1,5 +1,5 @@
 function parseTextToClass(text: string): DartClass {
-  const lines = text.split("\n").filter((line) => line != "");
+  const lines = text.split("\n").filter((line) => line !== "");
 
   const classFields = parseLinesToClassFields(lines);
   const className = parseLinesToClassName(lines);
@@ -10,23 +10,30 @@ function parseTextToClass(text: string): DartClass {
   return clazz;
 }
 
-function parseLinesToClassFields(lines: Array<string>): Array<DartClassField> {
-  lines = lines.filter((line) => !line.startsWith("  ///"));
+function parseLinesToClassFields(input: Array<string>): Array<DartClassField> {
   // Two spaces in the beginning - it has to be a class property.
+  const classFieldLinePrefix = "  final";
+
+  const lines = removeComments(input);
   const fieldListStartIndex = lines.findIndex((line) =>
-    line.startsWith("  final")
+    line.startsWith(classFieldLinePrefix)
   );
+  if (fieldListStartIndex === -1) return [];
+
   let fieldListEndIndex = fieldListStartIndex;
   for (let i = fieldListStartIndex + 1; i < lines.length; i++) {
     const line = lines[i];
-    if (!doesLookingFurtherMakeSense(line)) {
-      break;
-    }
-    if (
-      line.endsWith(";") &&
-      (line.startsWith("  final") ||
-        (lines[i - 1].startsWith("  final") && !lines[i - 1].includes(";")))
-    ) {
+    if (!doesLookingFurtherMakeSense(line)) break;
+
+    const isClassFieldLine =
+      line.endsWith(";") && line.startsWith(classFieldLinePrefix);
+
+    // Class fields can occupy two lines if the field name is long.
+    const isPreviousLineUnfinishedClassField =
+      lines[i - 1].startsWith(classFieldLinePrefix) &&
+      !lines[i - 1].includes(";");
+
+    if (isClassFieldLine || isPreviousLineUnfinishedClassField) {
       fieldListEndIndex = i;
     }
   }
@@ -37,9 +44,9 @@ function parseLinesToClassFields(lines: Array<string>): Array<DartClassField> {
     .replace(/\s+/g, " ")
     .trim()
     .split(";")
-    .filter((line) => line != "" && !line.startsWith("///"));
+    .filter((line) => line !== "");
 
-  return fieldListLines.map(function (line) {
+  return fieldListLines.map((line) => {
     const lineParts = line.trim().split(" ");
     const type = lineParts[1];
     const name = lineParts[2].replace(";", "");
@@ -49,7 +56,7 @@ function parseLinesToClassFields(lines: Array<string>): Array<DartClassField> {
 }
 
 function parseLinesToClassName(lines: Array<string>): string {
-  // FIXME What about class modifier? Are they used in widgets too?
+  // FIXME What about class modifiers? Are they used in widgets too?
   return lines.find((line) => line.startsWith("class "))?.split(" ")[1] ?? "";
 }
 
@@ -82,7 +89,7 @@ function parseLinesToConstructors(
           className,
           classFields
         );
-        if (constructor != null) constructors.push(constructor);
+        if (constructor !== null) constructors.push(constructor);
 
         i = j + 1;
         break;
@@ -111,7 +118,7 @@ function parseLinesToConstructor(
   className: string,
   classFields: Array<DartClassField>
 ): DartClassConstructor | null {
-  if (lines.length == 0) return null;
+  if (lines.length === 0) return null;
   const thiss = "this.";
 
   let constructorName: string | null = null;
@@ -127,7 +134,7 @@ function parseLinesToConstructor(
     .slice(1)
     .join("")
     .split(",")
-    .filter((line) => line != "" && !line.includes("})"));
+    .filter((line) => line !== "" && !line.includes("})"));
   const fieldLinesForClassFields = fieldLines.filter((line) =>
     line.includes(thiss)
   );
@@ -135,7 +142,7 @@ function parseLinesToConstructor(
     const lineFromFieldName = line.substring(
       line.indexOf(thiss) + thiss.length
     );
-    const hasDefaultValue = lineFromFieldName.indexOf(" ") != -1;
+    const hasDefaultValue = lineFromFieldName.indexOf(" ") !== -1;
     if (hasDefaultValue) {
       return lineFromFieldName.substring(0, lineFromFieldName.indexOf(" "));
     }
@@ -155,11 +162,11 @@ function parseLinesToConstructor(
   });
 
   const fields = fieldNames.map(
-    (fieldName) => classFields.find((field) => field.name == fieldName)!
+    (fieldName) => classFields.find((field) => field.name === fieldName)!
   );
 
   return new DartClassConstructor(
-    constructorName != null,
+    constructorName !== null,
     [...fields, ...customFields],
     constructorName
   );
@@ -170,6 +177,10 @@ function doesLookingFurtherMakeSense(line: string): boolean {
     !line.includes("Widget build(BuildContext context)") &&
     !line.includes("createState() =>")
   );
+}
+
+function removeComments(lines: Array<string>): Array<string> {
+  return lines.filter((line) => !line.trim().startsWith("//"));
 }
 
 class DartClass {
