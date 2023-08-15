@@ -72,13 +72,10 @@ function parseLinesToConstructors(
       continue;
     }
 
+    // FIXME Move this logic to another function - isEndOfConstructor or something like that
     for (let j = i; j < lines.length; j++) {
       // TODO Consider counting open and closed parenthesis to check whether constructor got closed
-      if (
-        lines[j].includes("});") ||
-        lines[j].includes("}) :") ||
-        lines[j].includes("})  :")
-      ) {
+      if (isEndOfMainConstructorPart(line)) {
         const constructorContent = lines.slice(i, j + 1);
         const constructor = parseLinesToConstructor(
           constructorContent,
@@ -100,6 +97,12 @@ function isConstructorLine(line: string, className: string): boolean {
   return (
     line.includes(`${className}(`) ||
     (line.includes(`${className}.`) && line.includes("("))
+  );
+}
+
+function isEndOfMainConstructorPart(line: string): boolean {
+  return (
+    line.includes("});") || line.includes("}) :") || line.includes("})  :")
   );
 }
 
