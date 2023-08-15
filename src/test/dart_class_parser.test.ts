@@ -1,14 +1,18 @@
 import {
+  DartClassConstructor,
   DartClassField,
   doesLookingFurtherMakeSense,
   isConstructorLine,
   parseLinesToClassFields,
   parseLinesToClassName,
+  parseLinesToConstructor,
 } from "../dart_class_parser";
 
 describe("doesLookingFurtherMakeSense", () => {
   test("when passed a line which is build() method signature, returns false ", () => {
-    expect(doesLookingFurtherMakeSense("Widget build(BuildContext context)")).toBe(false);
+    expect(
+      doesLookingFurtherMakeSense("Widget build(BuildContext context)")
+    ).toBe(false);
   });
 
   test("when passed a line which is createState() method signature, returns false ", () => {
@@ -25,7 +29,7 @@ describe("doesLookingFurtherMakeSense", () => {
 });
 
 describe("parseLinesToClassName", () => {
-  test("when passed empty array, returns empty string", () => {
+  test("when passed an empty array, returns empty string", () => {
     expect(parseLinesToClassName([])).toBe("");
   });
 
@@ -55,7 +59,9 @@ describe("parseLinesToClassName", () => {
       "   extends StatefulWidget with GreatWidgetMixin {",
     ];
 
-    expect(parseLinesToClassName(lines)).toBe("ClassWithVeryLongNameThatWouldNotFitInOneLineBecauseItsTooLong");
+    expect(parseLinesToClassName(lines)).toBe(
+      "ClassWithVeryLongNameThatWouldNotFitInOneLineBecauseItsTooLong"
+    );
   });
 });
 
@@ -67,11 +73,17 @@ describe("parseLinesToClassFields", () => {
   test("when passed single final field with correct indent, returns it", () => {
     const lines = ["  final String name;"];
 
-    expect(parseLinesToClassFields(lines)).toEqual([new DartClassField("name", "String")]);
+    expect(parseLinesToClassFields(lines)).toEqual([
+      new DartClassField("name", "String"),
+    ]);
   });
 
   test("when passed multiple final fields with correct indents, returns them", () => {
-    const lines = ["  final String name;", "  final int age;", "  final Gender gender;"];
+    const lines = [
+      "  final String name;",
+      "  final int age;",
+      "  final Gender gender;",
+    ];
 
     expect(parseLinesToClassFields(lines)).toEqual([
       new DartClassField("name", "String"),
@@ -102,7 +114,12 @@ describe("parseLinesToClassFields", () => {
   });
 
   test("when passed multiple final fields, some with not correct indents (so no class fields) and some with correct indents, returns fields with correct indents", () => {
-    const lines = ["final String name;", "final int age;", "  final String nameCorrect;", "  final int ageCorrect;"];
+    const lines = [
+      "final String name;",
+      "final int age;",
+      "  final String nameCorrect;",
+      "  final int ageCorrect;",
+    ];
 
     expect(parseLinesToClassFields(lines)).toEqual([
       new DartClassField("nameCorrect", "String"),
@@ -305,6 +322,15 @@ describe("isConstructorLine", () => {
       expect(isConstructorLine("Loader({", "Loader")).toBe(true);
     });
 
+    test("when passed a regular constructor declaration wit all parameters in one line, returns true", () => {
+      expect(
+        isConstructorLine(
+          "const Loader({super.key, this.active = true, this.semanticsLabel});",
+          "Loader"
+        )
+      ).toBe(true);
+    });
+
     test("when passed a named constructor declaration, returns true", () => {
       expect(isConstructorLine("Loader.named({", "Loader")).toBe(true);
     });
@@ -314,7 +340,9 @@ describe("isConstructorLine", () => {
     });
 
     test("when passed other class' named constructor declaration that starts with desired class' name, returns false", () => {
-      expect(isConstructorLine("LoaderButDifferent.named({", "Loader")).toBe(false);
+      expect(isConstructorLine("LoaderButDifferent.named({", "Loader")).toBe(
+        false
+      );
     });
   });
 
@@ -332,7 +360,170 @@ describe("isConstructorLine", () => {
     });
 
     test("when passed other class' named constructor declaration that starts with desired class' name, returns false", () => {
-      expect(isConstructorLine("LoaderButDifferent.named(", "Loader")).toBe(false);
+      expect(isConstructorLine("LoaderButDifferent.named(", "Loader")).toBe(
+        false
+      );
+    });
+  });
+});
+
+describe("parseLinesToConstructor", () => {
+  test("when passed an empty array, returns null", () => {
+    expect(parseLinesToConstructor([], "Loader", [])).toBe(null);
+  });
+
+  describe("regular constructor", () => {
+    test("does not use super params", () => {
+      const lines = [
+        "  const Loader({",
+        "    super.key,",
+        "    required super.active,",
+        "  })",
+      ];
+      const classFields = [new DartClassField("active", "bool")];
+
+      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+        new DartClassConstructor(false, [], null)
+      );
+    });
+
+    test("with named fields that are all class fields", () => {
+      const lines = [
+        "  const Loader({",
+        "    super.key,",
+        "    this.active = true,",
+        "    this.semanticsLabel,",
+        "  })",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        // class can have more fields which are not in the main constructor part because they are in its initializer list
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+        new DartClassConstructor(false, [classFields[0], classFields[1]], null)
+      );
+    });
+
+    // FIXME Add support for one-line constructors and constructors without trailing comma
+    // test("all parameters in one line", () => {
+    //   const lines = [
+    //     "  const Loader({super.key, this.active = true, this.semanticsLabel});",
+    //   ];
+    //   const classFields = [
+    //     new DartClassField("active", "bool"),
+    //     new DartClassField("semanticsLabel", "String"),
+    //   ];
+
+    //   expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+    //     new DartClassConstructor(false, classFields, null)
+    //   );
+    // });
+
+    test("with named fields of which some are class fields and some are custom fields", () => {
+      const lines = [
+        "  const Loader({",
+        "    super.key,",
+        "    this.active = true,",
+        "    this.semanticsLabel,",
+        "    bool big = false,",
+        "    required bool animated,",
+        "  })",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+        new DartClassConstructor(
+          false,
+          [
+            classFields[0],
+            classFields[1],
+            new DartClassField("big", "bool"),
+            new DartClassField("animated", "bool"),
+          ],
+          null
+        )
+      );
+    });
+  });
+
+  describe("named constructor", () => {
+    test("does not use super params", () => {
+      const lines = [
+        "  const Loader.small({",
+        "    super.key,",
+        "    required super.active,",
+        "  })",
+      ];
+      const classFields = [new DartClassField("active", "bool")];
+
+      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+        new DartClassConstructor(true, [], "small")
+      );
+    });
+
+    test("with named fields that are all class fields", () => {
+      const lines = [
+        "  const Loader.small({",
+        "    super.key,",
+        "    this.active = true,",
+        "    this.semanticsLabel,",
+        "  }) : big = false,",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        // class can have more fields which are not in the main constructor part because they are in its initializer list
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+        new DartClassConstructor(
+          true,
+          [classFields[0], classFields[1]],
+          "small"
+        )
+      );
+    });
+
+    test("with named fields of which some are class fields and some are custom fields", () => {
+      const lines = [
+        "  const Loader.small({",
+        "    super.key,",
+        "    this.active = true,",
+        "    this.semanticsLabel,",
+        "    bool big = false,",
+        "    required bool animated,",
+        "  })",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+        new DartClassConstructor(
+          true,
+          [
+            classFields[0],
+            classFields[1],
+            new DartClassField("big", "bool"),
+            new DartClassField("animated", "bool"),
+          ],
+          "small"
+        )
+      );
     });
   });
 });
