@@ -13,7 +13,9 @@ function parseTextToClass(text: string): DartClass {
 function parseLinesToClassFields(lines: Array<string>): Array<DartClassField> {
   lines = lines.filter((line) => !line.startsWith("  ///"));
   // Two spaces in the beginning - it has to be a class property.
-  const fieldListStartIndex = lines.findIndex((line) => line.startsWith("  final"));
+  const fieldListStartIndex = lines.findIndex((line) =>
+    line.startsWith("  final")
+  );
   let fieldListEndIndex = fieldListStartIndex;
   for (let i = fieldListStartIndex + 1; i < lines.length; i++) {
     const line = lines[i];
@@ -22,7 +24,8 @@ function parseLinesToClassFields(lines: Array<string>): Array<DartClassField> {
     }
     if (
       line.endsWith(";") &&
-      (line.startsWith("  final") || (lines[i - 1].startsWith("  final") && !lines[i - 1].includes(";")))
+      (line.startsWith("  final") ||
+        (lines[i - 1].startsWith("  final") && !lines[i - 1].includes(";")))
     ) {
       fieldListEndIndex = i;
     }
@@ -71,10 +74,18 @@ function parseLinesToConstructors(
 
     for (let j = i; j < lines.length; j++) {
       // TODO Consider counting open and closed parenthesis to check whether constructor got closed
-      if (lines[j].includes("});") || lines[j].includes("}) :") || lines[j].includes("})  :")) {
+      if (
+        lines[j].includes("});") ||
+        lines[j].includes("}) :") ||
+        lines[j].includes("})  :")
+      ) {
         const constructorContent = lines.slice(i, j + 1);
-        const constructor = parseLinesToConstructor(constructorContent, className, classFields);
-        constructors.push(constructor);
+        const constructor = parseLinesToConstructor(
+          constructorContent,
+          className,
+          classFields
+        );
+        if (constructor != null) constructors.push(constructor);
 
         i = j + 1;
         break;
@@ -86,20 +97,27 @@ function parseLinesToConstructors(
 }
 
 function isConstructorLine(line: string, className: string): boolean {
-  return line.includes(`${className}(`) || (line.includes(`${className}.`) && line.includes("("));
+  return (
+    line.includes(`${className}(`) ||
+    (line.includes(`${className}.`) && line.includes("("))
+  );
 }
 
 function parseLinesToConstructor(
   lines: Array<string>,
   className: string,
   classFields: Array<DartClassField>
-): DartClassConstructor {
+): DartClassConstructor | null {
+  if (lines.length == 0) return null;
   const thiss = "this.";
 
   let constructorName: string | null = null;
   const named = lines[0].includes(`${className}.`);
   if (named) {
-    constructorName = lines[0].substring(lines[0].indexOf(".") + 1, lines[0].indexOf("({"));
+    constructorName = lines[0].substring(
+      lines[0].indexOf(".") + 1,
+      lines[0].indexOf("({")
+    );
   }
 
   const fieldLines = lines
@@ -107,9 +125,13 @@ function parseLinesToConstructor(
     .join("")
     .split(",")
     .filter((line) => line != "" && !line.includes("})"));
-  const fieldLinesForClassFields = fieldLines.filter((line) => line.includes(thiss));
+  const fieldLinesForClassFields = fieldLines.filter((line) =>
+    line.includes(thiss)
+  );
   const fieldNames = fieldLinesForClassFields.map((line) => {
-    const lineFromFieldName = line.substring(line.indexOf(thiss) + thiss.length);
+    const lineFromFieldName = line.substring(
+      line.indexOf(thiss) + thiss.length
+    );
     const hasDefaultValue = lineFromFieldName.indexOf(" ") != -1;
     if (hasDefaultValue) {
       return lineFromFieldName.substring(0, lineFromFieldName.indexOf(" "));
@@ -117,7 +139,9 @@ function parseLinesToConstructor(
     return lineFromFieldName;
   });
 
-  const cutomFieldLines = fieldLines.filter((line) => !line.includes(thiss) && !line.includes("super."));
+  const cutomFieldLines = fieldLines.filter(
+    (line) => !line.includes(thiss) && !line.includes("super.")
+  );
 
   const customFields = cutomFieldLines.map((line) => {
     const lineParts = line.trim().split(" ");
@@ -127,13 +151,22 @@ function parseLinesToConstructor(
     return new DartClassField(lineParts[1], lineParts[0]);
   });
 
-  const fields = fieldNames.map((fieldName) => classFields.find((field) => field.name == fieldName)!);
+  const fields = fieldNames.map(
+    (fieldName) => classFields.find((field) => field.name == fieldName)!
+  );
 
-  return new DartClassConstructor(constructorName != null, [...fields, ...customFields], constructorName);
+  return new DartClassConstructor(
+    constructorName != null,
+    [...fields, ...customFields],
+    constructorName
+  );
 }
 
 function doesLookingFurtherMakeSense(line: string): boolean {
-  return !line.includes("Widget build(BuildContext context)") && !line.includes("createState() =>");
+  return (
+    !line.includes("Widget build(BuildContext context)") &&
+    !line.includes("createState() =>")
+  );
 }
 
 class DartClass {
@@ -141,7 +174,11 @@ class DartClass {
   fields: Array<DartClassField>;
   constructors: Array<DartClassConstructor>;
 
-  constructor(name: string, fields: Array<DartClassField>, constructors: Array<DartClassConstructor>) {
+  constructor(
+    name: string,
+    fields: Array<DartClassField>,
+    constructors: Array<DartClassConstructor>
+  ) {
     this.name = name;
     this.fields = fields;
     this.constructors = constructors;
@@ -153,7 +190,11 @@ class DartClassConstructor {
   fields: Array<DartClassField>;
   name: string | null;
 
-  constructor(named: boolean, fields: Array<DartClassField>, name: string | null) {
+  constructor(
+    named: boolean,
+    fields: Array<DartClassField>,
+    name: string | null
+  ) {
     this.named = named;
     this.fields = fields;
     this.name = name;
@@ -171,9 +212,11 @@ class DartClassField {
 }
 
 export {
+  DartClassConstructor,
   DartClassField,
   doesLookingFurtherMakeSense,
   isConstructorLine,
   parseLinesToClassFields,
   parseLinesToClassName,
+  parseLinesToConstructor,
 };
