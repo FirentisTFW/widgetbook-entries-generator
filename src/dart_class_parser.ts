@@ -56,7 +56,7 @@ function parseLinesToClassFields(input: Array<string>): Array<DartClassField> {
 }
 
 function parseLinesToClassName(lines: Array<string>): string {
-  // FIXME What about class modifiers? Are they used in widgets too?
+  // TODO What about class modifiers? Are they used in widgets too?
   return lines.find((line) => line.startsWith("class "))?.split(" ")[1] ?? "";
 }
 
