@@ -1,3 +1,9 @@
+import {
+  DartClass,
+  DartClassConstructor,
+  DartClassField,
+} from "./data/dart_class";
+
 function parseTextToClass(text: string): DartClass {
   const lines = text.split("\n").filter((line) => line !== "");
 
@@ -178,69 +184,7 @@ function removeComments(lines: Array<string>): Array<string> {
   return lines.filter((line) => !line.trim().startsWith("//"));
 }
 
-declare global {
-  interface String {
-    substringAfter(text: string): string;
-  }
-
-  interface Array<T> {
-    whereType<T>(): Array<T>;
-  }
-}
-
-String.prototype.substringAfter = function (text: string) {
-  return this.substring(this.indexOf(text) + text.length);
-};
-
-Array.prototype.whereType = function <T>() {
-  return this.filter((element): element is T => !!element);
-};
-
-class DartClass {
-  name: string;
-  fields: Array<DartClassField>;
-  constructors: Array<DartClassConstructor>;
-
-  constructor(
-    name: string,
-    fields: Array<DartClassField>,
-    constructors: Array<DartClassConstructor>
-  ) {
-    this.name = name;
-    this.fields = fields;
-    this.constructors = constructors;
-  }
-}
-
-class DartClassConstructor {
-  named: boolean;
-  fields: Array<DartClassField>;
-  name: string | null;
-
-  constructor(
-    named: boolean,
-    fields: Array<DartClassField>,
-    name: string | null
-  ) {
-    this.named = named;
-    this.fields = fields;
-    this.name = name;
-  }
-}
-
-class DartClassField {
-  name: string;
-  type: string;
-
-  constructor(name: string, type: string) {
-    this.name = name;
-    this.type = type;
-  }
-}
-
 export {
-  DartClassConstructor,
-  DartClassField,
   doesLookingFurtherMakeSense,
   isConstructorLine,
   parseLinesToClassFields,

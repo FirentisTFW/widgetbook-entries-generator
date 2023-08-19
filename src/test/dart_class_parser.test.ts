@@ -1,12 +1,12 @@
 import {
-  DartClassConstructor,
-  DartClassField,
   doesLookingFurtherMakeSense,
   isConstructorLine,
   parseLinesToClassFields,
   parseLinesToClassName,
   parseLinesToConstructor,
 } from "../dart_class_parser";
+import { DartClassConstructor, DartClassField } from "../data/dart_class";
+import "../util/extensions";
 
 describe("doesLookingFurtherMakeSense", () => {
   test("when passed a line which is build() method signature, returns false ", () => {
