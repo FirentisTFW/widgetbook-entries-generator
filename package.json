@@ -1,6 +1,7 @@
 {
   "name": "widgetbook-generator",
-  "displayName": "widgetbook_generator",
+  "displayName": "Widgetbook Entries Generator",
+	"publisher": "LeanCode",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -9,15 +10,35 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:dart",
+		"onCommand:widgetbook_generator.generate.widget"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "widgetbook-generator.helloWorld",
-        "title": "Hello World"
-      }
-    ]
+			{
+				"command": "widgetbook-generator.generate.widget",
+				"title": "Create widgetbook entry for this widget"
+			}
+		],
+		"configuration": [
+			{
+				"title": "Widgetbook Entries Generator configuration",
+				"properties": {
+					"widgetbook-generator.widgets_directory_path": {
+						"type": "string",
+						"default": "TODO",
+						"description": "Widgetbook widgets directory."
+					},
+					"widgetbook-generator.root_directory_name": {
+						"type": "string",
+						"default": "TODO",
+						"description": "Root project directory name."
+					}
+				}
+			}
+		]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
