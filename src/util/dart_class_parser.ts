@@ -2,7 +2,7 @@ import {
   DartClass,
   DartClassConstructor,
   DartClassField,
-} from "./data/dart_class";
+} from "../data/dart_class";
 
 function parseTextToClass(text: string): DartClass {
   const lines = text.split("\n").filter((line) => line !== "");

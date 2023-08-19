@@ -1,11 +1,11 @@
+import { DartClassConstructor, DartClassField } from "../data/dart_class";
 import {
   doesLookingFurtherMakeSense,
   isConstructorLine,
   parseLinesToClassFields,
   parseLinesToClassName,
   parseLinesToConstructor,
-} from "../dart_class_parser";
-import { DartClassConstructor, DartClassField } from "../data/dart_class";
+} from "../util/dart_class_parser";
 import "../util/extensions";
 
 describe("doesLookingFurtherMakeSense", () => {

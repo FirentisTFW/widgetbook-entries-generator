@@ -1,5 +1,7 @@
 declare global {
   interface String {
+    includesAll(text: Array<string>): boolean;
+
     substringAfter(text: string): string;
   }
 
