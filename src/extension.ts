@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { WidgetbookEntriesCodeActions } from "./code_actions/widgetbook_entries";
+import { parseTextToClass } from "./util/dart_class_parser";
+import { writeWidgetbookEntry } from "./util/file_util";
 
 const DART_MODE = { language: "dart", scheme: "file" };
 
@@ -18,7 +20,18 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-function generateWidgetbookEntryForWidgetInScope(): void {
-  // FIXME Implement
-  console.log("generateWidgetbookEntryForWidgetInScope");
+async function generateWidgetbookEntryForWidgetInScope(): Promise<void> {
+  const activeEditor = vscode.window.activeTextEditor;
+  if (!activeEditor) return;
+
+  const text = activeEditor.document.getText();
+  const currentLineIndex = activeEditor.selection.active.line;
+  const fileContentFromCurrentLine = text
+    .split("\n")
+    .slice(currentLineIndex)
+    .join("\n");
+
+  const clazz = parseTextToClass(fileContentFromCurrentLine);
+
+  await writeWidgetbookEntry(clazz);
 }
