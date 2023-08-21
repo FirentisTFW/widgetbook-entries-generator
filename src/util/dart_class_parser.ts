@@ -85,7 +85,7 @@ function parseLinesToConstructors(
 
     for (let j = i; j < lines.length; j++) {
       // TODO Consider counting open and closed parenthesis to check whether constructor got closed
-      if (!isEndOfMainConstructorPart(line)) continue;
+      if (!isEndOfMainConstructorPart(lines[j])) continue;
 
       const constructorContent = lines.slice(i, j + 1);
       const constructor = parseLinesToConstructor(
@@ -190,4 +190,5 @@ export {
   parseLinesToClassFields,
   parseLinesToClassName,
   parseLinesToConstructor,
+  parseTextToClass,
 };
