@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { CodeAction, CodeActionKind } from "vscode";
 import "../util/extensions";
 
-class WidgetbookEntriesCodeActions {
+class WidgetbookEntriesCodeActions implements vscode.CodeActionProvider {
   provideCodeActions(): Array<CodeAction> {
     if (!this.isCursorAtWidgetClassDeclaration()) return [];
 
@@ -24,7 +24,7 @@ class WidgetbookEntriesCodeActions {
     });
   }
 
-  isCursorAtWidgetClassDeclaration(): boolean {
+  private isCursorAtWidgetClassDeclaration(): boolean {
     const activeEditor = vscode.window.activeTextEditor;
     if (!activeEditor) return false;
 
