@@ -15,7 +15,7 @@ class WidgetbookEntriesCodeActions implements vscode.CodeActionProvider {
 
     return commands.map((c) => {
       // FIXME Reconsider CodeActionKind
-      const action = new CodeAction(c.title, CodeActionKind.QuickFix);
+      const action = new CodeAction(c.title, CodeActionKind.Refactor);
       action.command = {
         command: c.command,
         title: c.title,
