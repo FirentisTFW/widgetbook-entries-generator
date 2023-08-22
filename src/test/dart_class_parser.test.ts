@@ -82,13 +82,13 @@ describe("parseLinesToClassFields", () => {
     const lines = [
       "  final String name;",
       "  final int age;",
-      "  final Gender gender;",
+      "  final Gender? gender;",
     ];
 
     expect(parseLinesToClassFields(lines)).toEqual([
       new DartClassField("name", "String"),
       new DartClassField("age", "int"),
-      new DartClassField("gender", "Gender"),
+      new DartClassField("gender", "Gender", true),
     ]);
   });
 
@@ -116,14 +116,14 @@ describe("parseLinesToClassFields", () => {
   test("when passed multiple final fields, some with not correct indents (so no class fields) and some with correct indents, returns fields with correct indents", () => {
     const lines = [
       "final String name;",
-      "final int age;",
+      "final int? age;",
       "  final String nameCorrect;",
-      "  final int ageCorrect;",
+      "  final int? ageCorrect;",
     ];
 
     expect(parseLinesToClassFields(lines)).toEqual([
       new DartClassField("nameCorrect", "String"),
-      new DartClassField("ageCorrect", "int"),
+      new DartClassField("ageCorrect", "int", true),
     ]);
   });
 
@@ -135,12 +135,12 @@ describe("parseLinesToClassFields", () => {
         "    super.key,",
         "    required this.title,",
         "    required this.type,",
-        "    required this.onTap,",
+        "    this.onTap,",
         "  });",
         "",
         "  final String title;",
         "  final ButtonType type;",
-        "  final VoidCallback onTap;",
+        "  final VoidCallback? onTap;",
         "",
         "  @override",
         "  Widget build(BuildContext context) {",
@@ -152,7 +152,7 @@ describe("parseLinesToClassFields", () => {
       expect(parseLinesToClassFields(lines)).toEqual([
         new DartClassField("title", "String"),
         new DartClassField("type", "ButtonType"),
-        new DartClassField("onTap", "VoidCallback"),
+        new DartClassField("onTap", "VoidCallback", true),
       ]);
     });
 
@@ -161,13 +161,13 @@ describe("parseLinesToClassFields", () => {
         "class Button extends StatelessWidget {",
         "  final String title;",
         "  final ButtonType type;",
-        "  final VoidCallback onTap;",
+        "  final VoidCallback? onTap;",
         "",
         "  const Button({",
         "    super.key,",
         "    required this.title,",
         "    required this.type,",
-        "    required this.onTap,",
+        "    this.onTap,",
         "  });",
         "",
         "  @override",
@@ -180,7 +180,7 @@ describe("parseLinesToClassFields", () => {
       expect(parseLinesToClassFields(lines)).toEqual([
         new DartClassField("title", "String"),
         new DartClassField("type", "ButtonType"),
-        new DartClassField("onTap", "VoidCallback"),
+        new DartClassField("onTap", "VoidCallback", true),
       ]);
     });
 
@@ -207,12 +207,12 @@ describe("parseLinesToClassFields", () => {
         "    super.key,",
         "    required this.title,",
         "    required this.type,",
-        "    required this.onTap,",
+        "    this.onTap,",
         "  });",
         "",
         "  final String title;",
         "  final ButtonType type;",
-        "  final VoidCallback onTap;",
+        "  final VoidCallback? onTap;",
         "",
         "@override",
         "State<Button> createState() => _ButtonState();",
@@ -222,7 +222,7 @@ describe("parseLinesToClassFields", () => {
       expect(parseLinesToClassFields(lines)).toEqual([
         new DartClassField("title", "String"),
         new DartClassField("type", "ButtonType"),
-        new DartClassField("onTap", "VoidCallback"),
+        new DartClassField("onTap", "VoidCallback", true),
       ]);
     });
 
@@ -231,13 +231,13 @@ describe("parseLinesToClassFields", () => {
         "class Button extends StatefulWidget {",
         "  final String title;",
         "  final ButtonType type;",
-        "  final VoidCallback onTap;",
+        "  final VoidCallback? onTap;",
         "",
         "  const Button({",
         "    super.key,",
         "    required this.title,",
         "    required this.type,",
-        "    required this.onTap,",
+        "    this.onTap,",
         "  });",
         "",
         "@override",
@@ -248,7 +248,7 @@ describe("parseLinesToClassFields", () => {
       expect(parseLinesToClassFields(lines)).toEqual([
         new DartClassField("title", "String"),
         new DartClassField("type", "ButtonType"),
-        new DartClassField("onTap", "VoidCallback"),
+        new DartClassField("onTap", "VoidCallback", true),
       ]);
     });
 

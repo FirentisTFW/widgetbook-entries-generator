@@ -33,10 +33,12 @@ class DartClassConstructor {
 class DartClassField {
   name: string;
   type: string;
+  nullable: boolean;
 
-  constructor(name: string, type: string) {
+  constructor(name: string, type: string, nullable = false) {
     this.name = name;
     this.type = type;
+    this.nullable = nullable;
   }
 }
 

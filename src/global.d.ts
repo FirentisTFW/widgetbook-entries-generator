@@ -2,6 +2,8 @@ declare global {
   interface String {
     includesAll(text: Array<string>): boolean;
 
+    removeTrailing(charactersCount: number): string;
+
     substringAfter(text: string): string;
   }
 

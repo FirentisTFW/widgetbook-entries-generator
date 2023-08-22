@@ -57,6 +57,10 @@ function parseLinesToClassFields(input: Array<string>): Array<DartClassField> {
     const type = lineParts[1];
     const name = lineParts[2].replace(";", "");
 
+    if (type.endsWith("?")) {
+      return new DartClassField(name, type.removeTrailing(1), true);
+    }
+
     return new DartClassField(name, type);
   });
 }
@@ -160,10 +164,21 @@ function parseLinesToConstructor(
 
   const customFields = customFieldsLines.map((line) => {
     const lineParts = line.trim().split(" ");
-    if (line.includes("required")) {
-      return new DartClassField(lineParts[2], lineParts[1]);
+    let name: string;
+    let type: string;
+    if (lineParts[0] === "required") {
+      name = lineParts[2];
+      type = lineParts[1];
+    } else {
+      name = lineParts[1];
+      type = lineParts[0];
     }
-    return new DartClassField(lineParts[1], lineParts[0]);
+
+    if (type.endsWith("?")) {
+      return new DartClassField(name, type.removeTrailing(1), true);
+    }
+
+    return new DartClassField(name, type);
   });
 
   return new DartClassConstructor(

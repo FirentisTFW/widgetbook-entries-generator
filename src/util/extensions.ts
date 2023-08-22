@@ -5,6 +5,10 @@ String.prototype.includesAll = function (texts: Array<string>) {
   return true;
 };
 
+String.prototype.removeTrailing = function (charactersCount: number) {
+  return this.slice(0, -charactersCount);
+};
+
 String.prototype.substringAfter = function (text: string) {
   return this.substring(this.indexOf(text) + text.length);
 };
