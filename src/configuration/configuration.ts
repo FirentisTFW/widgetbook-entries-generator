@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 const configurationEntry = "widgetbook_generator";
 
 const rootProjectDirectoryNameKey = "root_directory_name";
+const widgetbookVersionKey = "widgetbook_version";
 const widgetsDirectoryPathKey = "widgets_directory_path";
 
 class Configuration {
@@ -15,6 +16,10 @@ class Configuration {
 
   static rootProjectDirectoryName(): string | undefined {
     return Configuration.readSetting(rootProjectDirectoryNameKey);
+  }
+
+  static widgetbookVersion(): string | undefined {
+    return Configuration.readSetting(widgetbookVersionKey);
   }
 
   static widgetsDirectoryPath(): string | undefined {
