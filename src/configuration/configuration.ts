@@ -1,28 +1,28 @@
 import * as vscode from "vscode";
 
-const configurationEntry = "widgetbook_generator";
+const configurationEntry = "widgetbook-generator";
 
-const rootProjectDirectoryNameKey = "root_directory_name";
-const widgetbookVersionKey = "widgetbook_version";
-const widgetsDirectoryPathKey = "widgets_directory_path";
+const rootProjectDirectoryNameKey = "root-directory-name";
+const widgetbookVersionKey = "widgetbook-version";
+const widgetsDirectoryPathKey = "widgets-directory-path";
 
 class Configuration {
-  private static readSetting(key: string): string | undefined {
+  private static readSetting<T>(key: string): T {
     // TODO Use section or scope in getConfiguration method to improve performance
     return vscode.workspace
       .getConfiguration()
-      .get(`${configurationEntry}.` + key);
+      .get(`${configurationEntry}.` + key) as T;
   }
 
-  static rootProjectDirectoryName(): string | undefined {
+  static rootProjectDirectoryName(): string {
     return Configuration.readSetting(rootProjectDirectoryNameKey);
   }
 
-  static widgetbookVersion(): string | undefined {
+  static widgetbookVersion(): string {
     return Configuration.readSetting(widgetbookVersionKey);
   }
 
-  static widgetsDirectoryPath(): string | undefined {
+  static widgetsDirectoryPath(): string {
     return Configuration.readSetting(widgetsDirectoryPathKey);
   }
 }

@@ -17,37 +17,37 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-			{
-				"command": "widgetbook-generator.generate.widget",
-				"title": "Create widgetbook entry for this widget"
-			}
-		],
-		"configuration": [
-			{
-				"title": "Widgetbook Entries Generator configuration",
-				"properties": {
-					"widgetbook-generator.widgets_directory_path": {
-						"type": "string",
-						"default": "TODO",
-						"description": "Widgetbook widgets directory."
-					},
-					"widgetbook-generator.root_directory_name": {
-						"type": "string",
-						"default": "TODO",
-						"description": "Root project directory name."
-					},
-          "widgetbook-generator.widgetbook_version": {
-						"type": "string",
+      {
+        "command": "widgetbook-generator.generate.widget",
+        "title": "Create widgetbook entry for this widget"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Widgetbook Entries Generator configuration",
+        "properties": {
+          "widgetbook-generator.widgets-directory-path": {
+            "type": "string",
+            "default": "TODO",
+            "description": "Widgetbook widgets directory."
+          },
+          "widgetbook-generator.root-directory-name": {
+            "type": "string",
+            "default": "TODO",
+            "description": "Root project directory name."
+          },
+          "widgetbook-generator.widgetbook-version": {
+            "type": "string",
             "enum": [
               "3.0.0",
               "3.2.0"
             ],
-						"default": "3.0.0",
-						"description": "Widgetbook version defined in your pubspec file."
-					}
-				}
-			}
-		]
+            "default": "3.0.0",
+            "description": "Widgetbook version defined in your pubspec file."
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
