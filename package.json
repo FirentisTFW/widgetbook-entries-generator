@@ -11,8 +11,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:dart",
-    "onCommand:widgetbook-generator.generate.widget"
+    "onLanguage:dart"
   ],
   "main": "./out/extension.js",
   "contributes": {
