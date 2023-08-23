@@ -5,6 +5,8 @@ declare global {
     removeTrailing(charactersCount: number): string;
 
     substringAfter(text: string): string;
+
+    substringUpToAndIncluding(text: string): string;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

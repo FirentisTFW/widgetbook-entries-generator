@@ -1,7 +1,7 @@
 {
   "name": "widgetbook-generator",
   "displayName": "Widgetbook Entries Generator",
-	"publisher": "LeanCode",
+  "publisher": "LeanCode",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -12,7 +12,7 @@
   ],
   "activationEvents": [
     "onLanguage:dart",
-		"onCommand:widgetbook_generator.generate.widget"
+    "onCommand:widgetbook-generator.generate.widget"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -70,5 +70,8 @@
     "jest": "^29.6.2",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "change-case": "^4.1.2"
   }
 }
