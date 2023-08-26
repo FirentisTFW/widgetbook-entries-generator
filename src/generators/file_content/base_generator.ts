@@ -1,6 +1,10 @@
 import { camelCase, pascalCase } from "change-case";
 import { Configuration } from "../../configuration/configuration";
-import { DartClass, DartClassField } from "../../data/dart_class";
+import {
+  DartClass,
+  DartClassConstructor,
+  DartClassField,
+} from "../../data/dart_class";
 import { FileContentGenerator } from "./generator";
 
 class BaseFileContentGenerator implements FileContentGenerator {
@@ -52,11 +56,43 @@ class BaseFileContentGenerator implements FileContentGenerator {
   }
 
   useCases(): string {
-    throw new Error("Method not implemented.");
+    let output = "";
+    for (const constructor of this.clazz.constructors) {
+      const useCase = this.useCase(constructor);
+      output += useCase + "\n\n";
+    }
+
+    return output;
   }
 
-  useCase(): string {
-    throw new Error("Method not implemented.");
+  useCase(constructor: DartClassConstructor): string {
+    const constructorName = constructor.name ?? "default";
+    // FIXME useCaseName to a separate function, it's used twice in this file
+    const useCaseName = `useCase${this.clazz.name}${pascalCase(
+      constructor.name ?? ""
+    )}`;
+    const fullConstructorName = constructor.named
+      ? `${this.clazz.name}.${constructor.name}`
+      : this.clazz.name;
+
+    let output = `
+    @wa.WidgetbookUseCase(
+        name: '${constructorName}',
+        type: ${this.clazz.name},
+    )
+    Widget ${useCaseName}(BuildContext context) {
+        return ${fullConstructorName}(
+    `;
+
+    for (const field of constructor.fields) {
+      output += `${field.name}: ${this.knobForField(field)},\n`;
+    }
+
+    output += `
+        );
+    }`;
+
+    return output;
   }
 
   knobForField(field: DartClassField): string {

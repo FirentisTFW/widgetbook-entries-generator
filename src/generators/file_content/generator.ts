@@ -1,4 +1,8 @@
-import { DartClass, DartClassField } from "../../data/dart_class";
+import {
+  DartClass,
+  DartClassConstructor,
+  DartClassField,
+} from "../../data/dart_class";
 
 interface FileContentGenerator {
   clazz: DartClass;
@@ -9,7 +13,7 @@ interface FileContentGenerator {
 
   useCases(): string;
 
-  useCase(): string;
+  useCase(constructor: DartClassConstructor): string;
 
   knobForField(field: DartClassField): string;
 }
