@@ -4,6 +4,8 @@ declare global {
 
     removeTrailing(charactersCount: number): string;
 
+    sortLines(): string;
+
     substringAfter(text: string): string;
 
     substringUpToAndIncluding(text: string): string;

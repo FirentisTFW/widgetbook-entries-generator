@@ -9,6 +9,10 @@ String.prototype.removeTrailing = function (charactersCount: number) {
   return this.slice(0, -charactersCount);
 };
 
+String.prototype.sortLines = function () {
+  return this.split("\n").sort().join("\n");
+};
+
 String.prototype.substringAfter = function (text: string) {
   return this.substring(this.indexOf(text) + text.length);
 };
