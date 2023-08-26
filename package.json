@@ -43,6 +43,11 @@
             ],
             "default": "3.0.0",
             "description": "Widgetbook version defined in your pubspec file."
+          },
+          "widgetbook-generator.barrel-file-import": {
+            "type": "string",
+            "default": "TODO",
+            "description": "Barrel widgets file import. This file exports all your widgets. E.g. \"package:my_common_ui/widgets.dart\""
           }
         }
       }
