@@ -1,4 +1,5 @@
-import { PathGenerator, PathGeneratorImpl } from "./generator";
+import { PathGenerator } from "./generator";
+import { PathGeneratorImpl } from "./generator_impl";
 
 abstract class PathGeneratorFactory {
   static create(): PathGenerator {
