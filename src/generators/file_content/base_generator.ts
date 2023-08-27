@@ -52,9 +52,7 @@ class BaseFileContentGenerator implements FileContentGenerator {
 
     for (const constructor of this.clazz.constructors) {
       const constructorName = constructor.name ?? "default";
-      const useCaseName = `useCase${this.clazz.name}${pascalCase(
-        constructor.name ?? ""
-      )}`;
+      const useCaseName = this.useCaseName(constructor.name);
 
       output += `
         WidgetbookUseCase(
@@ -83,10 +81,7 @@ class BaseFileContentGenerator implements FileContentGenerator {
 
   useCase(constructor: DartClassConstructor): string {
     const constructorName = constructor.name ?? "default";
-    // FIXME useCaseName to a separate function, it's used twice in this file
-    const useCaseName = `useCase${this.clazz.name}${pascalCase(
-      constructor.name ?? ""
-    )}`;
+    const useCaseName = this.useCaseName(constructor.name);
     const fullConstructorName = constructor.named
       ? `${this.clazz.name}.${constructor.name}`
       : this.clazz.name;
@@ -126,6 +121,10 @@ class BaseFileContentGenerator implements FileContentGenerator {
 
     // If none of the cases in [knobForType] matches, it's probably a custom enum.
     return `context.knobs.options(label: '${name}', options: ${type}.values)`;
+  }
+
+  private useCaseName(constructorName: string | null): string {
+    return `useCase${this.clazz.name}${pascalCase(constructorName ?? "")}`;
   }
 }
 
