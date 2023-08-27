@@ -12,7 +12,12 @@ import { FileContentGenerator } from "./generator";
 //  for new versions as easy as possible.
 class BaseFileContentGenerator implements FileContentGenerator {
   clazz: DartClass;
-  // FIXME Add a comment for this field
+
+  /**
+   * Holds key-value pairs for known types. The key is a field type and value is a function that can be passed field name
+   * to generate knob entry.
+   * This field can be overriden in child classes (for instance if widgetbook API changed or a given type is supported differently).
+   */
   protected knobForType = new Map<string, (fieldName: string) => string>([
     ["bool", (fieldName) => `context.knobs.boolean(label: '${fieldName}')`],
     ["String", (fieldName) => `context.knobs.text(label: '${fieldName}')`],
@@ -24,6 +29,7 @@ class BaseFileContentGenerator implements FileContentGenerator {
       "double",
       (fieldName) => `context.knobs.number(label: '${fieldName}').toDouble()`,
     ],
+    // FIXME ValueChanged will not work currently. Should it be based on regex?
     ["ValueChanged<", () => `(_) {}`],
     ["VoidCallback", () => `() {}`],
     ["Key", (fieldName) => `const ValueKey('${fieldName}')`],
@@ -122,7 +128,7 @@ class BaseFileContentGenerator implements FileContentGenerator {
       return knob;
     }
 
-    // If none of the cases in [knobForType] matches, it's probably a custom enum.
+    // If none of the cases from [knobForType] matches, it's probably a custom enum.
     return `context.knobs.options(label: '${name}', options: ${type}.values)`;
   }
 
