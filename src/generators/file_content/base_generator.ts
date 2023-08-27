@@ -1,4 +1,4 @@
-import { camelCase, pascalCase } from "change-case";
+import { camelCase, pascalCase, sentenceCase } from "change-case";
 import { Configuration } from "../../configuration/configuration";
 import {
   DartClass,
@@ -9,6 +9,22 @@ import { FileContentGenerator } from "./generator";
 
 class BaseFileContentGenerator implements FileContentGenerator {
   clazz: DartClass;
+  // FIXME Add a comment for this field
+  protected knobForType = new Map<string, (fieldName: string) => string>([
+    ["bool", (fieldName) => `context.knobs.boolean(label: '${fieldName}')`],
+    ["String", (fieldName) => `context.knobs.text(label: '${fieldName}')`],
+    [
+      "int",
+      (fieldName) => `context.knobs.number(label: '${fieldName}').toInt()`,
+    ],
+    [
+      "double",
+      (fieldName) => `context.knobs.number(label: '${fieldName}').toDouble()`,
+    ],
+    ["ValueChanged<", () => `(_) {}`],
+    ["VoidCallback", () => `() {}`],
+    ["Key", (fieldName) => `const ValueKey('${fieldName}')`],
+  ]);
 
   constructor(clazz: DartClass) {
     this.clazz = clazz;
@@ -96,7 +112,20 @@ class BaseFileContentGenerator implements FileContentGenerator {
   }
 
   knobForField(field: DartClassField): string {
-    throw new Error("Method not implemented.");
+    const type = field.type;
+    const name = sentenceCase(field.name);
+
+    // TODO Add support for nullalble types
+    // TODO Preserve default values (to be done also in parsing)
+
+    const knob = this.knobForType.get(type)?.(name);
+
+    if (knob !== undefined) {
+      return knob;
+    }
+
+    // If none of the cases in [knobForType] matches, it's probably a custom enum.
+    return `context.knobs.options(label: '${name}', options: ${type}.values)`;
   }
 }
 

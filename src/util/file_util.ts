@@ -1,4 +1,5 @@
 import { DartClass } from "../data/dart_class";
+import { BaseFileContentGenerator } from "../generators/file_content/base_generator";
 import { PathGeneratorFactory } from "../generators/path/factory";
 
 async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
@@ -9,7 +10,17 @@ async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
 
   const filePath = pathGenerator.prepareWidgetbookEntryFilePath(clazz.name);
 
-  console.log(filePath);
+  let output = "";
+
+  const fileContentGenerator = new BaseFileContentGenerator(clazz);
+
+  const imports = fileContentGenerator.imports();
+  const componentDeclaration = fileContentGenerator.componentDeclaration();
+  const useCases = fileContentGenerator.useCases();
+
+  output = [imports, componentDeclaration, useCases].join("\n");
+
+  console.log(output);
 }
 
 export { writeWidgetbookEntry };
