@@ -1,4 +1,5 @@
-import { writeFile } from "fs";
+import { existsSync, writeFile } from "fs";
+import * as vscode from "vscode";
 import { DartClass } from "../data/dart_class";
 import { FileContentGeneratorFactory } from "../generators/file_content/factory";
 import { PathGeneratorFactory } from "../generators/path/factory";
@@ -17,7 +18,10 @@ async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
 
   const fileContent = prepareWidgetbookEntryFor(clazz);
 
-  // FIXME Check whether a file already exists, offer different options then
+  if (existsSync(filePath)) {
+    const shouldOverrideFile = await showOverrideFileDialog(fileContent);
+    if (!shouldOverrideFile) return;
+  }
 
   writeFile(filePath, fileContent, ENCODING, (error) => {
     if (error) {
@@ -26,7 +30,26 @@ async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
   });
 }
 
-function prepareWidgetbookEntryFor(clazz: DartClass) {
+async function showOverrideFileDialog(fileContent: string): Promise<boolean> {
+  const yesOption = "YES";
+  const noOption = `NO`;
+  const copyOption = "NO, COPY GENERATED CONTENT TO THE CLIPBOARD";
+
+  const result = await vscode.window.showQuickPick(
+    [yesOption, noOption, copyOption],
+    {
+      placeHolder: `This widget already has its representation in the widgetbook. Do you want to override it?`,
+    }
+  );
+
+  if (result === copyOption) {
+    await vscode.env.clipboard.writeText(fileContent);
+  }
+
+  return result === yesOption;
+}
+
+function prepareWidgetbookEntryFor(clazz: DartClass): string {
   const fileContentGenerator = FileContentGeneratorFactory.create(clazz);
 
   const imports = fileContentGenerator.imports();
