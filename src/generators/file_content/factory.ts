@@ -1,7 +1,7 @@
 import { Configuration } from "../../configuration/configuration";
 import { DartClass } from "../../data/dart_class";
-import { BaseFileContentGenerator } from "./base_generator";
 import { FileContentGenerator } from "./generator";
+import { FileContentGenerator3_0_0 } from "./impl/3_0_0_generator";
 
 abstract class FileContentGeneratorFactory {
   static create(clazz: DartClass): FileContentGenerator {
@@ -9,12 +9,12 @@ abstract class FileContentGeneratorFactory {
       Configuration.widgetbookVersion()
     );
 
-    // FIXME Return a proper implementation class based on user settings.
     switch (widgetbookVersion) {
       case WidgetbookVersion.v3_0_0:
-        return new BaseFileContentGenerator(clazz);
+        return new FileContentGenerator3_0_0(clazz);
       case WidgetbookVersion.v3_2_0:
-        return new BaseFileContentGenerator(clazz);
+        // FIXME Implement v3_2_0 generator
+        return new FileContentGenerator3_0_0(clazz);
     }
   }
 }

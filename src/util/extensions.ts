@@ -17,6 +17,10 @@ String.prototype.substringAfter = function (text: string) {
   return this.substring(this.indexOf(text) + text.length);
 };
 
+String.prototype.substringUpTo = function (text: string) {
+  return this.substring(0, this.indexOf(text));
+};
+
 String.prototype.substringUpToAndIncluding = function (text: string) {
   return this.substring(0, this.indexOf(text) + text.length);
 };

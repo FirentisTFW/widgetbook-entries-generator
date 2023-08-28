@@ -1,4 +1,4 @@
-import { camelCase, pascalCase, sentenceCase } from "change-case";
+import { sentenceCase } from "change-case";
 import { Configuration } from "../../configuration/configuration";
 import {
   DartClass,
@@ -10,8 +10,12 @@ import { FileContentGenerator } from "./generator";
 // FIXME Implement generating content for two widgetbook versions (3.0.0 and 3.2.0),
 //  identify common parts and refactor the class to make adding support
 //  for new versions as easy as possible.
-class BaseFileContentGenerator implements FileContentGenerator {
+abstract class BaseFileContentGenerator implements FileContentGenerator {
   clazz: DartClass;
+
+  constructor(clazz: DartClass) {
+    this.clazz = clazz;
+  }
 
   /**
    * Holds key-value pairs for known types. The key is a field type and value is a function that can be passed field name
@@ -29,15 +33,43 @@ class BaseFileContentGenerator implements FileContentGenerator {
       "double",
       (fieldName) => `context.knobs.number(label: '${fieldName}').toDouble()`,
     ],
-    // FIXME ValueChanged will not work currently. Should it be based on regex?
-    ["ValueChanged<", () => `(_) {}`],
+    ["ValueChanged", () => `(_) {}`],
     ["VoidCallback", () => `() {}`],
     ["Key", (fieldName) => `const ValueKey('${fieldName}')`],
   ]);
 
-  constructor(clazz: DartClass) {
-    this.clazz = clazz;
-  }
+  /**
+   * Works the same way as [knobForType] but for nullable values, @see knobForType.
+   */
+  protected knobForNullableType = new Map<
+    string,
+    (fieldName: string) => string
+  >([
+    [
+      "bool",
+      (fieldName) => `context.knobs.nullableBoolean(label: '${fieldName}')`,
+    ],
+    [
+      "String",
+      (fieldName) => `context.knobs.nullableText(label: '${fieldName}')`,
+    ],
+    [
+      "int",
+      (fieldName) =>
+        `context.knobs.nullableNumber(label: '${fieldName}').toInt()`,
+    ],
+    [
+      "double",
+      (fieldName) =>
+        `context.knobs.nullableNumber(label: '${fieldName}').toDouble()`,
+    ],
+  ]);
+
+  abstract componentDeclaration(): string;
+
+  abstract useCase(constructor: DartClassConstructor): string;
+
+  protected abstract knobForEnum(name: string, type: string): string;
 
   imports(): string {
     // TODO Add support for direct path instead of a barrel file?
@@ -51,33 +83,6 @@ class BaseFileContentGenerator implements FileContentGenerator {
     `.sortLines();
   }
 
-  componentDeclaration(): string {
-    // TODO Allow ommiting widget name prefixes
-    let output = `
-    const ${camelCase(this.clazz.name)}Component = WidgetbookComponent(
-      name: '${this.clazz.name}',
-      useCases: [
-    `;
-
-    for (const constructor of this.clazz.constructors) {
-      const constructorName = constructor.name ?? "default";
-      const useCaseName = this.useCaseName(constructor.name);
-
-      output += `
-        WidgetbookUseCase(
-          name: '${constructorName}',
-          builder: ${useCaseName},
-        ),`;
-    }
-
-    output += `
-      ],
-    );
-    `;
-
-    return output;
-  }
-
   useCases(): string {
     let output = "";
     for (const constructor of this.clazz.constructors) {
@@ -88,52 +93,26 @@ class BaseFileContentGenerator implements FileContentGenerator {
     return output;
   }
 
-  useCase(constructor: DartClassConstructor): string {
-    const constructorName = constructor.name ?? "default";
-    const useCaseName = this.useCaseName(constructor.name);
-    const fullConstructorName = constructor.named
-      ? `${this.clazz.name}.${constructor.name}`
-      : this.clazz.name;
-
-    let output = `
-    @wa.WidgetbookUseCase(
-        name: '${constructorName}',
-        type: ${this.clazz.name},
-    )
-    Widget ${useCaseName}(BuildContext context) {
-        return ${fullConstructorName}(
-    `;
-
-    for (const field of constructor.fields) {
-      output += `${field.name}: ${this.knobForField(field)},\n`;
-    }
-
-    output += `
-        );
-    }`;
-
-    return output;
-  }
-
   knobForField(field: DartClassField): string {
-    const type = field.type;
+    const type = field.type.includes("<")
+      ? field.type.substringUpTo("<")
+      : field.type;
     const name = sentenceCase(field.name);
 
-    // TODO Add support for nullalble types
     // TODO Preserve default values (to be done also in parsing)
 
-    const knob = this.knobForType.get(type)?.(name);
+    let knob: string | undefined;
+    if (field.nullable) {
+      knob = this.knobForNullableType.get(type)?.(name);
+    }
+    knob ??= this.knobForType.get(type)?.(name);
 
     if (knob !== undefined) {
       return knob;
     }
 
     // If none of the cases from [knobForType] matches, it's probably a custom enum.
-    return `context.knobs.options(label: '${name}', options: ${type}.values)`;
-  }
-
-  private useCaseName(constructorName: string | null): string {
-    return `useCase${this.clazz.name}${pascalCase(constructorName ?? "")}`;
+    return this.knobForEnum(name, type);
   }
 }
 

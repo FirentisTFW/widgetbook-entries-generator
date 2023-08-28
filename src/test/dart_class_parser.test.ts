@@ -408,7 +408,7 @@ describe("parseLinesToConstructor", () => {
       );
     });
 
-    // FIXME Add support for one-line constructors and constructors without trailing comma
+    // TODO Add support for one-line constructors and constructors without trailing comma
     // test("all parameters in one line", () => {
     //   const lines = [
     //     "  const Loader({super.key, this.active = true, this.semanticsLabel});",
