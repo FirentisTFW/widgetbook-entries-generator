@@ -1,14 +1,11 @@
 import { writeFile } from "fs";
 import { DartClass } from "../data/dart_class";
-import { BaseFileContentGenerator } from "../generators/file_content/base_generator";
+import { FileContentGeneratorFactory } from "../generators/file_content/factory";
 import { PathGeneratorFactory } from "../generators/path/factory";
 
 const ENCODING = "utf8";
 
 async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
-  // FIXME Do this the right way - a class which handles different settings
-  //  and chooses strategy based on that.
-
   const pathGenerator = PathGeneratorFactory.create();
 
   const filePath = pathGenerator.prepareWidgetbookEntryFilePath(clazz.name);
@@ -18,7 +15,19 @@ async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
     return;
   }
 
-  const fileContentGenerator = new BaseFileContentGenerator(clazz);
+  const fileContent = prepareWidgetbookEntryFor(clazz);
+
+  // FIXME Check whether a file already exists, offer different options then
+
+  writeFile(filePath, fileContent, ENCODING, (error) => {
+    if (error) {
+      console.log(error);
+    }
+  });
+}
+
+function prepareWidgetbookEntryFor(clazz: DartClass) {
+  const fileContentGenerator = FileContentGeneratorFactory.create(clazz);
 
   const imports = fileContentGenerator.imports();
   const componentDeclaration = fileContentGenerator.componentDeclaration();
@@ -26,13 +35,7 @@ async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
 
   const output = [imports, componentDeclaration, useCases].join("\n");
 
-  console.log(output);
-
-  writeFile(filePath, output, ENCODING, (error) => {
-    if (error) {
-      console.log(error);
-    }
-  });
+  return output;
 }
 
 export { writeWidgetbookEntry };
