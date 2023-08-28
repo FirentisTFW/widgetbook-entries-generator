@@ -7,9 +7,6 @@ import {
 } from "../../data/dart_class";
 import { FileContentGenerator } from "./generator";
 
-// FIXME Implement generating content for two widgetbook versions (3.0.0 and 3.2.0),
-//  identify common parts and refactor the class to make adding support
-//  for new versions as easy as possible.
 abstract class BaseFileContentGenerator implements FileContentGenerator {
   clazz: DartClass;
 
