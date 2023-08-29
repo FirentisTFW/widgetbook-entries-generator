@@ -1,13 +1,8 @@
 import { camelCase, pascalCase } from "change-case";
-import { DartClass, DartClassConstructor } from "../../../data/dart_class";
+import { DartClassConstructor } from "../../../data/dart_class";
 import { BaseFileContentGenerator } from "../base_generator";
 
 class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
-  constructor(clazz: DartClass) {
-    super(clazz);
-    this.applyMigrations();
-  }
-
   applyMigrations(): void {
     this.knobForType.set(
       "String",

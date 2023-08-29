@@ -12,6 +12,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
 
   constructor(clazz: DartClass) {
     this.clazz = clazz;
+    this.applyMigrations();
   }
 
   /**
@@ -67,6 +68,11 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
   abstract useCase(constructor: DartClassConstructor): string;
 
   protected abstract knobForEnum(name: string, type: string): string;
+
+  // FIXME Comment
+  applyMigrations(): void {
+    // To be overriden in child classes.
+  }
 
   imports(): string {
     // TODO Add support for direct path instead of a barrel file?
