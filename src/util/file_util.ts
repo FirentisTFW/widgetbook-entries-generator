@@ -28,6 +28,8 @@ async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
       console.log(error);
     }
   });
+
+  await formatDocument(filePath);
 }
 
 async function showOverrideFileDialog(fileContent: string): Promise<boolean> {
@@ -47,6 +49,20 @@ async function showOverrideFileDialog(fileContent: string): Promise<boolean> {
   }
 
   return result === yesOption;
+}
+
+async function formatDocument(path: string): Promise<void> {
+  const document = await vscode.workspace.openTextDocument(path);
+  await vscode.window.showTextDocument(document);
+
+  // Does not work without additional delay :(
+  await delay(100);
+
+  await vscode.commands.executeCommand("editor.action.formatDocument");
+}
+
+function delay(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 function prepareWidgetbookEntryFor(clazz: DartClass): string {
