@@ -1,12 +1,50 @@
 import { camelCase, pascalCase } from "change-case";
-import { DartClassConstructor } from "../../../data/dart_class";
+import { DartClass, DartClassConstructor } from "../../../data/dart_class";
 import { BaseFileContentGenerator } from "../base_generator";
 
-class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
+class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
+  constructor(clazz: DartClass) {
+    super(clazz);
+    this.applyMigrations();
+  }
+
+  applyMigrations(): void {
+    this.knobForType.set(
+      "String",
+      (fieldName) => `context.knobs.string(label: '${fieldName}')`
+    );
+    this.knobForType.set(
+      "double",
+      (fieldName) => `context.knobs.double.input(label: '${fieldName}')`
+    );
+    this.knobForType.set(
+      "int",
+      (fieldName) => `context.knobs.double.input(label: '${fieldName}').toInt()`
+    );
+
+    this.knobForNullableType.set(
+      "bool",
+      (fieldName) => `context.knobs.booleanOrNull(label: '${fieldName}')`
+    );
+    this.knobForNullableType.set(
+      "String",
+      (fieldName) => `context.knobs.stringOrNull(label: '${fieldName}')`
+    );
+    this.knobForNullableType.set(
+      "double",
+      (fieldName) => `context.knobs.doubleOrNull.input(label: '${fieldName}')`
+    );
+    this.knobForNullableType.set(
+      "int",
+      (fieldName) =>
+        `context.knobs.doubleOrNull.input(label: '${fieldName}').toInt()`
+    );
+  }
+
   componentDeclaration(): string {
     // TODO Allow ommiting widget name prefixes
     let output = `
-    const ${camelCase(this.clazz.name)}Component = WidgetbookComponent(
+    final ${camelCase(this.clazz.name)}Component = WidgetbookComponent(
       name: '${this.clazz.name}',
       useCases: [
     `;
@@ -36,7 +74,7 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
       : this.clazz.name;
 
     let output = `
-    @wa.WidgetbookUseCase(
+    @wa.UseCase(
         name: '${constructor.useCaseName}',
         type: ${this.clazz.name},
     )
@@ -60,8 +98,8 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
   }
 
   protected knobForEnum(name: string, type: string) {
-    return `context.knobs.options(label: '${name}', options: ${type}.values)`;
+    return `context.knobs.list(label: '${name}', options: ${type}.values)`;
   }
 }
 
-export { FileContentGenerator3_0_0 };
+export { FileContentGenerator3_2_0 };

@@ -28,6 +28,10 @@ class DartClassConstructor {
     this.fields = fields;
     this.name = name;
   }
+
+  get useCaseName(): string {
+    return this.named ? `.${this.name}` : "default";
+  }
 }
 
 class DartClassField {
