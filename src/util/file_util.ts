@@ -30,6 +30,7 @@ async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
   });
 
   await formatDocument(filePath);
+  // FIXME Save file after formatting
 }
 
 async function showOverrideFileDialog(fileContent: string): Promise<boolean> {
