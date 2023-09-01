@@ -19,6 +19,19 @@ A couple of settings need to be specified for the extension to work. They can be
 
 FIXME We need to add support for apps that don't use barrel files.
 
+Those settings are purely project specific. If you work on multiple projects at the same time and all of them use widgetbook, you can override above settings for each of them. Just create `settings.json` file under `.vscode` directory in your project. You can override specific settings there just for the current workspace:
+
+```json
+{
+  "widgetbook-generator.rootDirectoryName": "another-project",
+  "widgetbook-generator.widgetbookVersion": "3.2.0"
+}
+```
+
+## Usage
+
+Put the cursor on the line with class name declaration, press a shortcut for `Quick Fix` action (FIXME Write defaults for different OSes here), then select option `Create widgetbook entry for this widget`. Make sure you've configured your extension first by following steps described in [Configuration](#configuration).
+
 ## Notes
 
 This project is still in very early stage of development. If you find that something is not working properly or you think some features are missing, feel free to create an issue or even a pull request.
