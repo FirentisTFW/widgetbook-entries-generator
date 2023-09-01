@@ -2,10 +2,10 @@ import * as vscode from "vscode";
 
 const configurationEntry = "widgetbook-generator";
 
-const barrelFileImport = "barrel-file-import";
-const rootProjectDirectoryNameKey = "root-directory-name";
-const widgetbookVersionKey = "widgetbook-version";
-const widgetsDirectoryPathKey = "widgets-directory-path";
+const barrelFileImport = "barrelFileImport";
+const rootProjectDirectoryNameKey = "rootDirectoryName";
+const widgetbookVersionKey = "widgetbookVersion";
+const widgetsDirectoryPathKey = "widgetsDirectoryPath";
 
 class Configuration {
   private static readSetting<T>(key: string): T {

@@ -25,17 +25,17 @@
       {
         "title": "Widgetbook Entries Generator configuration",
         "properties": {
-          "widgetbook-generator.widgets-directory-path": {
+          "widgetbook-generator.widgetsDirectoryPath": {
             "type": "string",
             "default": "TODO",
             "description": "Widgetbook widgets directory."
           },
-          "widgetbook-generator.root-directory-name": {
+          "widgetbook-generator.rootDirectoryName": {
             "type": "string",
             "default": "TODO",
             "description": "Root project directory name."
           },
-          "widgetbook-generator.widgetbook-version": {
+          "widgetbook-generator.widgetbookVersion": {
             "type": "string",
             "enum": [
               "3.0.0",
@@ -44,7 +44,7 @@
             "default": "3.0.0",
             "description": "Widgetbook version defined in your pubspec file."
           },
-          "widgetbook-generator.barrel-file-import": {
+          "widgetbook-generator.barrelFileImport": {
             "type": "string",
             "default": "TODO",
             "description": "Barrel widgets file import. This file exports all your widgets. E.g. \"package:my_common_ui/widgets.dart\""
