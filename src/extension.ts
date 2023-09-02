@@ -5,7 +5,7 @@ import { writeWidgetbookEntry } from "./util/file_util";
 
 const DART_MODE = { language: "dart", scheme: "file" };
 
-export function activate(context: vscode.ExtensionContext) {
+function activate(context: vscode.ExtensionContext) {
   const command = vscode.commands.registerCommand(
     "widgetbook-generator.generate.widget",
     generateWidgetbookEntryForWidgetInScope
@@ -35,3 +35,5 @@ async function generateWidgetbookEntryForWidgetInScope(): Promise<void> {
 
   await writeWidgetbookEntry(clazz);
 }
+
+export { activate };
