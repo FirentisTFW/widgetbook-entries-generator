@@ -29,8 +29,7 @@ async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
     }
   });
 
-  await formatDocument(filePath);
-  // FIXME Save file after formatting
+  await formatAndSaveFile(filePath);
 }
 
 async function showOverrideFileDialog(fileContent: string): Promise<boolean> {
@@ -52,7 +51,7 @@ async function showOverrideFileDialog(fileContent: string): Promise<boolean> {
   return result === yesOption;
 }
 
-async function formatDocument(path: string): Promise<void> {
+async function formatAndSaveFile(path: string): Promise<void> {
   const document = await vscode.workspace.openTextDocument(path);
   await vscode.window.showTextDocument(document);
 
@@ -60,6 +59,7 @@ async function formatDocument(path: string): Promise<void> {
   await delay(100);
 
   await vscode.commands.executeCommand("editor.action.formatDocument");
+  await vscode.commands.executeCommand("workbench.action.files.save");
 }
 
 function delay(milliseconds: number) {
