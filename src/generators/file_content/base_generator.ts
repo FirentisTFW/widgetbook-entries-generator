@@ -69,8 +69,11 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
 
   protected abstract knobForEnum(name: string, type: string): string;
 
-  // FIXME Comment
-  applyMigrations(): void {
+  /**
+   * This method should be overriden in child classes in order to apply changes that happened
+   * in different versions of widgetbook in relation to setup present in BaseFileContentGenerator.
+   */
+  protected applyMigrations(): void {
     // To be overriden in child classes.
   }
 
