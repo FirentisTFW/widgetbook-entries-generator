@@ -32,6 +32,8 @@ Those settings are purely project specific. If you work on multiple projects at 
 
 Put the cursor on the line with class name declaration, press a shortcut for `Quick Fix` action (FIXME Write defaults for different OSes here), then select option `Create widgetbook entry for this widget`. Make sure you've configured your extension first by following steps described in [Configuration](#configuration).
 
+![demo](https://raw.githubusercontent.com/FirentisTFW/widgetbook-entries-generator/main/demo_gifs/generate_widgetbook_entry_preview.gif)
+
 ## Notes
 
 This project is still in very early stage of development. If you find that something is not working properly or you think some features are missing, feel free to create an issue or even a pull request.
