@@ -29,8 +29,12 @@ class WidgetbookEntriesCodeActions implements vscode.CodeActionProvider {
 
     const lineIndex = activeEditor.selection.active.line;
     const currentLine = activeEditor.document.lineAt(lineIndex).text;
+    const lineBelow = activeEditor.document.lineAt(lineIndex + 1).text;
 
-    return currentLine.includesAll(["class", "Widget"]);
+    return (
+      currentLine.includes("class") &&
+      (currentLine.includes("Widget") || lineBelow.includes("Widget"))
+    );
   }
 }
 
