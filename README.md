@@ -40,6 +40,8 @@ Those settings are purely project specific. If you work on multiple projects at 
 
 Put the cursor on the line with class name declaration, press a shortcut for `Quick Fix` action (FIXME Write defaults for different OSes here), then select option `Create widgetbook entry for this widget`. Make sure you've configured your extension first by following steps described in [Configuration](#configuration).
 
+Before using the extension to generate files, make sure the code meets the [requirements](#requirements).
+
 ## Notes
 
 This project is still in very early stage of development. If you find that something is not working properly or you think some features are missing, feel free to create an issue or even a pull request.
@@ -50,7 +52,7 @@ This project is still in very early stage of development. If you find that somet
 
 Since the project is still in very early stage of development, some rules need to be followed for the extension to work correctly.
 
-1. File must be formatted when generating entries.
+1. File must be formatted when generating entries (using `dart format`). VSCode often does this for you when you save the file (if you have _Format On Save_ option selected).
 2. Trailing commas in widget constructors must be used.
 
    Good:
