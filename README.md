@@ -25,8 +25,6 @@ A couple of settings need to be specified for the extension to work. They can be
 - **Root Directory Name** - root name of the directory you have open in the VSCode. It's shown by default on the VSCode's app bar or on top of the file explorer tab. It's needed to correctly generate widgetbook path.
 - **Barrel File Import** - the file which exports all your custom widgets. E.g. `package:my_common_ui/widgets.dart`
 
-FIXME We need to add support for apps that don't use barrel files.
-
 Those settings are purely project specific. If you work on multiple projects at the same time and all of them use widgetbook, you can override above settings for each of them. Just create `settings.json` file under `.vscode` directory in your project. You can override specific settings there just for the current workspace:
 
 ```json
@@ -53,6 +51,7 @@ This project is still in very early stage of development. If you find that somet
 Since the project is still in very early stage of development, some rules need to be followed for the extension to work correctly.
 
 1. File must be formatted when generating entries (using `dart format`). VSCode often does this for you when you save the file (if you have _Format On Save_ option selected).
+
 2. Trailing commas in widget constructors must be used.
 
    Good:
@@ -75,3 +74,5 @@ Since the project is still in very early stage of development, some rules need t
        required this.icon,
        this.onTap});
    ```
+
+3. Code must use 2 spaces for indents (this is a default in Flutter).
