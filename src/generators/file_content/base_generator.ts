@@ -78,7 +78,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
   }
 
   imports(): string {
-    // TODO Add support for direct path instead of a barrel file?
+    // FIXME Add support for direct path instead of a barrel file?
     const appWidgetsImport = Configuration.barrelFileImport();
 
     return `

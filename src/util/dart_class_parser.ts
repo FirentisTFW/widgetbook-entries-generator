@@ -88,7 +88,7 @@ function parseLinesToConstructors(
     }
 
     for (let j = i; j < lines.length; j++) {
-      // TODO Consider counting open and closed parenthesis to check whether constructor got closed
+      // If any issues are encountered, consider counting open and closed parenthesis to check whether constructor got closed
       if (!isEndOfMainConstructorPart(lines[j])) continue;
 
       const constructorContent = lines.slice(i, j + 1);

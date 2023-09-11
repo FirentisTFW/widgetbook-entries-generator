@@ -4,7 +4,6 @@ import { BaseFileContentGenerator } from "../base_generator";
 
 class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
   componentDeclaration(): string {
-    // TODO Allow ommiting widget name prefixes
     let output = `
     const ${camelCase(this.clazz.name)}Component = WidgetbookComponent(
       name: '${this.clazz.name}',
