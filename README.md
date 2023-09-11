@@ -23,7 +23,7 @@ A couple of settings need to be specified for the extension to work. They can be
 - **Widgetbook Version** - should be set as the same version you use in your `pubspec.yaml` file.
 - **Widgets Directory Path** - a directory in which you want to create new widgetbook entries. Whenever you use the extension to generate an entry for the widget, the generated file will be placed in this directory. The path is relative to the directory you have open in the VSCode.
 - **Root Directory Name** - root name of the directory you have open in the VSCode. It's shown by default on the VSCode's app bar or on top of the file explorer tab. It's needed to correctly generate widgetbook path.
-- **Barrel File Import** - the file which exports all your custom widgets. E.g. `package:my_common_ui/widgets.dart`
+- **Barrel File Import** - the file which exports all your custom widgets. E.g. `package:my_common_ui/widgets.dart`. If you don't use a barrel file for exporting your widgets, you can leave this setting empty, you'll need to add proper imports manually then.
 
 Those settings are purely project specific. If you work on multiple projects at the same time and all of them use widgetbook, you can override above settings for each of them. Just create `settings.json` file under `.vscode` directory in your project. You can override specific settings there just for the current workspace:
 
@@ -75,4 +75,4 @@ Since the project is still in very early stage of development, some rules need t
        this.onTap});
    ```
 
-3. Code must use 2 spaces for indents (this is a default in Flutter).
+3. Code must use 2 spaces for indents (this is a default setting in Flutter).
