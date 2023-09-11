@@ -75,4 +75,8 @@ Since the project is still in very early stage of development, some rules need t
        this.onTap});
    ```
 
+   ```dart
+   const Button({super.key, required this.onTap, required this.label});
+   ```
+
 3. Code must use 2 spaces for indents (this is a default setting in Flutter).
