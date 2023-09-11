@@ -36,7 +36,7 @@ Those settings are purely project specific. If you work on multiple projects at 
 
 ## Usage
 
-Put the cursor on the line with class name declaration, press a shortcut for `Quick Fix` action (FIXME Write defaults for different OSes here), then select option `Create widgetbook entry for this widget`. Make sure you've configured your extension first by following steps described in [Configuration](#configuration).
+Put the cursor on the line with class name declaration, press a shortcut for `Quick Fix` action (by default `Ctrl+.` on Windows/Linux and `Cmd+.` on macOS), then select option `Create widgetbook entry for this widget`. Make sure you've configured your extension first by following steps described in [Configuration](#configuration).
 
 Before using the extension to generate files, make sure the code meets the [requirements](#requirements).
 
