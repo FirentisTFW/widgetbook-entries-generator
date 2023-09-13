@@ -54,14 +54,11 @@
     ]
   },
   "scripts": {
-    "compile": "tsc -p ./",
     "esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "lint": "eslint src --ext ts",
-    "pretest": "npm run compile && npm run lint",
     "test": "jest",
-		"test-compile": "tsc -p ./",
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
     "watch": "tsc -watch -p ./"
   },
