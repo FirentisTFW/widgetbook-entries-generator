@@ -63,6 +63,8 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     ],
   ]);
 
+  protected widgetbookAnnotation = "widgetbook";
+
   abstract componentDeclaration(): string;
 
   abstract useCase(constructor: DartClassConstructor): string;
@@ -85,7 +87,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     import '${appWidgetsImport}';
     import 'package:flutter/widgets.dart';
     import 'package:widgetbook/widgetbook.dart';
-    import 'package:widgetbook_annotation/widgetbook_annotation.dart' as wa;
+    import 'package:widgetbook_annotation/widgetbook_annotation.dart' as ${this.widgetbookAnnotation};
     `.sortLines();
   }
 

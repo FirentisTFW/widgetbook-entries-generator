@@ -35,7 +35,7 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
       : this.clazz.name;
 
     let output = `
-    @wa.WidgetbookUseCase(
+    @${this.widgetbookAnnotation}.WidgetbookUseCase(
         name: '${constructor.useCaseName}',
         type: ${this.clazz.name},
     )
