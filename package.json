@@ -28,7 +28,7 @@
           "widgetbook-generator.widgetsDirectoryPath": {
             "type": "string",
             "default": "TODO",
-            "description": "Widgetbook widgets directory."
+            "description": "Widgetbook widgets directory. Relative to the root workspace directory in VSCode."
           },
           "widgetbook-generator.rootDirectoryName": {
             "type": "string",
