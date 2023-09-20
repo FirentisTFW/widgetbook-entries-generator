@@ -1,0 +1,4 @@
+- Decide based on configuration setting whether to use generation or manual approach
+- Slider or input for numbers - a setting
+- Default value for non-nullable texts, same as label?
+- Ommiting widget prefixes
