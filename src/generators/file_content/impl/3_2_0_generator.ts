@@ -32,7 +32,7 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
     this.knobForNullableType.set(
       "int",
       (fieldName) =>
-        `context.knobs.doubleOrNull.input(label: '${fieldName}').toInt()`
+        `context.knobs.doubleOrNull.input(label: '${fieldName}')?.toInt()`
     );
   }
 

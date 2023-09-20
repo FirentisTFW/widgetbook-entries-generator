@@ -54,12 +54,12 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     [
       "int",
       (fieldName) =>
-        `context.knobs.nullableNumber(label: '${fieldName}').toInt()`,
+        `context.knobs.nullableNumber(label: '${fieldName}')?.toInt()`,
     ],
     [
       "double",
       (fieldName) =>
-        `context.knobs.nullableNumber(label: '${fieldName}').toDouble()`,
+        `context.knobs.nullableNumber(label: '${fieldName}')?.toDouble()`,
     ],
   ]);
 
