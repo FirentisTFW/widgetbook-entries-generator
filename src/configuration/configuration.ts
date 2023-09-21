@@ -1,4 +1,8 @@
 import * as vscode from "vscode";
+import {
+  WidgetbookVersion,
+  parseWidgetbookVersion,
+} from "./enums/widgetbook_version";
 
 const configurationEntry = "widgetbook-generator";
 
@@ -23,8 +27,10 @@ class Configuration {
     return Configuration.readSetting(rootProjectDirectoryNameKey);
   }
 
-  static widgetbookVersion(): string {
-    return Configuration.readSetting(widgetbookVersionKey);
+  static widgetbookVersion(): WidgetbookVersion {
+    const version = Configuration.readSetting<string>(widgetbookVersionKey);
+
+    return parseWidgetbookVersion(version);
   }
 
   static widgetsDirectoryPath(): string {

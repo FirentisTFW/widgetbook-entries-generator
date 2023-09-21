@@ -1,4 +1,5 @@
 import { Configuration } from "../../configuration/configuration";
+import { WidgetbookVersion } from "../../configuration/enums/widgetbook_version";
 import { DartClass } from "../../data/dart_class";
 import { FileContentGenerator } from "./generator";
 import { FileContentGenerator3_0_0 } from "./impl/3_0_0_generator";
@@ -6,9 +7,7 @@ import { FileContentGenerator3_2_0 } from "./impl/3_2_0_generator";
 
 abstract class FileContentGeneratorFactory {
   static create(clazz: DartClass): FileContentGenerator {
-    const widgetbookVersion = parseWidgetbookVersion(
-      Configuration.widgetbookVersion()
-    );
+    const widgetbookVersion = Configuration.widgetbookVersion();
 
     switch (widgetbookVersion) {
       case WidgetbookVersion.v3_0_0:
@@ -17,23 +16,6 @@ abstract class FileContentGeneratorFactory {
         return new FileContentGenerator3_2_0(clazz);
     }
   }
-}
-
-enum WidgetbookVersion {
-  v3_0_0,
-  v3_2_0,
-}
-
-function parseWidgetbookVersion(version: string): WidgetbookVersion {
-  // TODO Consider better way of handling this. Does TypeScript offer something cool here?
-  switch (version) {
-    case "3.0.0":
-      return WidgetbookVersion.v3_0_0;
-    case "3.2.0":
-      return WidgetbookVersion.v3_2_0;
-  }
-
-  throw new Error(`This widgetbook version is not handled: ${version}`);
 }
 
 export { FileContentGeneratorFactory };
