@@ -6,7 +6,8 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
   applyMigrations(): void {
     this.knobForType.set(
       "String",
-      (fieldName) => `context.knobs.string(label: '${fieldName}')`
+      (fieldName) =>
+        `context.knobs.string(label: '${fieldName}', initialValue: '${fieldName}')`
     );
     this.knobForType.set(
       "double",

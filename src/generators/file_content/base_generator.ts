@@ -22,7 +22,11 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
    */
   protected knobForType = new Map<string, (fieldName: string) => string>([
     ["bool", (fieldName) => `context.knobs.boolean(label: '${fieldName}')`],
-    ["String", (fieldName) => `context.knobs.text(label: '${fieldName}')`],
+    [
+      "String",
+      (fieldName) =>
+        `context.knobs.text(label: '${fieldName}', initialValue: '${fieldName}')`,
+    ],
     [
       "int",
       (fieldName) => `context.knobs.number(label: '${fieldName}').toInt()`,
