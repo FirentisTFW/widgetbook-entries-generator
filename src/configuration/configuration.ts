@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { Approach, parseApproach } from "./enums/approach";
 import {
   WidgetbookVersion,
   parseWidgetbookVersion,
@@ -6,6 +7,7 @@ import {
 
 const configurationEntry = "widgetbook-generator";
 
+const approachKey = "approach";
 const barrelFileImport = "barrelFileImport";
 const rootProjectDirectoryNameKey = "rootDirectoryName";
 const widgetbookVersionKey = "widgetbookVersion";
@@ -17,6 +19,12 @@ class Configuration {
     return vscode.workspace
       .getConfiguration()
       .get(`${configurationEntry}.` + key) as T;
+  }
+
+  static approach(): Approach {
+    const approach = Configuration.readSetting<string>(approachKey);
+
+    return parseApproach(approach);
   }
 
   static barrelFileImport(): string {
