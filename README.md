@@ -20,6 +20,7 @@ The extension can be installed from the [VSCode Marketplace](https://marketplace
 
 A couple of settings need to be specified for the extension to work. They can be set in VSCode Settings after typing "widgetbook" in the searchbar.
 
+- **Aproach** - the Widgetbook approach you want to use. Can be set to _Manual_ or _Generation_. In _Manual_ approach you'll need to add widgets to the Widgetbook manually, in Generation _approach_ `build_runner` will do that for you.
 - **Widgetbook Version** - should be set as the same version you use in your `pubspec.yaml` file.
 - **Widgets Directory Path** - a directory in which you want to create new widgetbook entries. Whenever you use the extension to generate an entry for the widget, the generated file will be placed in this directory. The path is relative to the directory you have open in the VSCode.
 - **Root Directory Name** - root name of the directory you have open in the VSCode. It's shown by default on the VSCode's app bar or on top of the file explorer tab. It's needed to correctly generate widgetbook path.
