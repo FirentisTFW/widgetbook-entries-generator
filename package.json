@@ -25,11 +25,20 @@
       {
         "title": "Widgetbook Entries Generator configuration",
         "properties": {
-          "widgetbook-generator.widgetsDirectoryPath": {
+          "widgetbook-generator.approach": {
+            "type": "string",
+            "enum": [
+              "Manual",
+              "Generation"
+            ],
+            "default": "Generation",
+            "description": "Approach - in Manual you'll need to add widgets to the Widgetbook manually, in Generation build runner will do that for you."
+          },
+          "widgetbook-generator.barrelFileImport": {
             "type": "string",
             "default": "TODO",
-            "description": "Widgetbook widgets directory. Relative to the root workspace directory in VSCode."
-          },
+            "description": "Barrel widgets file import. This file exports all your widgets. E.g. \"package:my_common_ui/widgets.dart\"."
+          },    
           "widgetbook-generator.rootDirectoryName": {
             "type": "string",
             "default": "TODO",
@@ -44,19 +53,10 @@
             "default": "3.0.0",
             "description": "Widgetbook version defined in your pubspec file."
           },
-          "widgetbook-generator.barrelFileImport": {
+          "widgetbook-generator.widgetsDirectoryPath": {
             "type": "string",
             "default": "TODO",
-            "description": "Barrel widgets file import. This file exports all your widgets. E.g. \"package:my_common_ui/widgets.dart\"."
-          },    
-          "widgetbook-generator.approach": {
-            "type": "string",
-            "enum": [
-              "Manual",
-              "Generation"
-            ],
-            "default": "Generation",
-            "description": "Approach - in Manual you'll to add widgets manually to the Widgetbook, in Generation build runner will do that for you."
+            "description": "Widgetbook widgets directory. Relative to the root workspace directory in VSCode."
           }
         }
       }
