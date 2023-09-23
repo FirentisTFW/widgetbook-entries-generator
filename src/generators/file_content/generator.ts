@@ -9,9 +9,11 @@ interface FileContentGenerator {
 
   imports(): string;
 
-  componentDeclaration(): string;
+  manualComponentDeclaration(): string;
 
   useCases(): string;
+
+  useCaseAnnotation(constructor: DartClassConstructor): string;
 
   useCase(constructor: DartClassConstructor): string;
 

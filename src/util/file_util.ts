@@ -1,5 +1,7 @@
 import { existsSync, writeFile } from "fs";
 import * as vscode from "vscode";
+import { Configuration } from "../configuration/configuration";
+import { Approach } from "../configuration/enums/approach";
 import { DartClass } from "../data/dart_class";
 import { FileContentGeneratorFactory } from "../generators/file_content/factory";
 import { PathGeneratorFactory } from "../generators/path/factory";
@@ -68,9 +70,13 @@ function delay(milliseconds: number) {
 
 function prepareWidgetbookEntryFor(clazz: DartClass): string {
   const fileContentGenerator = FileContentGeneratorFactory.create(clazz);
+  const useGenerationApproach =
+    Configuration.approach() === Approach.generation;
 
   const imports = fileContentGenerator.imports();
-  const componentDeclaration = fileContentGenerator.componentDeclaration();
+  const componentDeclaration = useGenerationApproach
+    ? ""
+    : fileContentGenerator.manualComponentDeclaration();
   const useCases = fileContentGenerator.useCases();
 
   const output = [imports, componentDeclaration, useCases].join("\n");

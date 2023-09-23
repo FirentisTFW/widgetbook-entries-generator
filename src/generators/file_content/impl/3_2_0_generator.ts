@@ -37,7 +37,7 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
     );
   }
 
-  componentDeclaration(): string {
+  manualComponentDeclaration(): string {
     // TODO Allow ommiting widget name prefixes
     let output = `
     final ${camelCase(this.clazz.name)}Component = WidgetbookComponent(
@@ -63,6 +63,15 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
     return output;
   }
 
+  useCaseAnnotation(constructor: DartClassConstructor): string {
+    return `
+    @${this.widgetbookAnnotation}.UseCase(
+        name: '${constructor.useCaseName}',
+        type: ${this.clazz.name},
+    )
+    `;
+  }
+
   useCase(constructor: DartClassConstructor): string {
     const useCaseName = this.useCaseName(constructor.name);
     const fullConstructorName = constructor.named
@@ -70,10 +79,6 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
       : this.clazz.name;
 
     let output = `
-    @${this.widgetbookAnnotation}.UseCase(
-        name: '${constructor.useCaseName}',
-        type: ${this.clazz.name},
-    )
     Widget ${useCaseName}(BuildContext context) {
         return ${fullConstructorName}(
     `;

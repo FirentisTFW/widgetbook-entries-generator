@@ -3,7 +3,7 @@ import { DartClassConstructor } from "../../../data/dart_class";
 import { BaseFileContentGenerator } from "../base_generator";
 
 class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
-  componentDeclaration(): string {
+  manualComponentDeclaration(): string {
     let output = `
     const ${camelCase(this.clazz.name)}Component = WidgetbookComponent(
       name: '${this.clazz.name}',
@@ -28,6 +28,15 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
     return output;
   }
 
+  useCaseAnnotation(constructor: DartClassConstructor): string {
+    return `
+    @${this.widgetbookAnnotation}.WidgetbookUseCase(
+      name: '${constructor.useCaseName}',
+      type: ${this.clazz.name},
+    )
+    `;
+  }
+
   useCase(constructor: DartClassConstructor): string {
     const useCaseName = this.useCaseName(constructor.name);
     const fullConstructorName = constructor.named
@@ -35,10 +44,6 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
       : this.clazz.name;
 
     let output = `
-    @${this.widgetbookAnnotation}.WidgetbookUseCase(
-        name: '${constructor.useCaseName}',
-        type: ${this.clazz.name},
-    )
     Widget ${useCaseName}(BuildContext context) {
         return ${fullConstructorName}(
     `;

@@ -1,5 +1,6 @@
 import { sentenceCase } from "change-case";
 import { Configuration } from "../../configuration/configuration";
+import { Approach } from "../../configuration/enums/approach";
 import {
   DartClass,
   DartClassConstructor,
@@ -69,7 +70,9 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
 
   protected widgetbookAnnotation = "widgetbook";
 
-  abstract componentDeclaration(): string;
+  abstract manualComponentDeclaration(): string;
+
+  abstract useCaseAnnotation(constructor: DartClassConstructor): string;
 
   abstract useCase(constructor: DartClassConstructor): string;
 
@@ -86,19 +89,33 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
   imports(): string {
     // TODO Add support for direct path instead of a barrel file?
     const appWidgetsImport = Configuration.barrelFileImport();
+    const useGenerationApproach =
+      Configuration.approach() === Approach.generation;
 
-    return `
+    let fixedImports = `
     import '${appWidgetsImport}';
     import 'package:flutter/widgets.dart';
     import 'package:widgetbook/widgetbook.dart';
-    import 'package:widgetbook_annotation/widgetbook_annotation.dart' as ${this.widgetbookAnnotation};
-    `.sortLines();
+    `;
+
+    if (useGenerationApproach) {
+      fixedImports += `import 'package:widgetbook_annotation/widgetbook_annotation.dart' as ${this.widgetbookAnnotation};`;
+    }
+
+    return fixedImports.sortLines();
   }
 
   useCases(): string {
     let output = "";
     for (const constructor of this.clazz.constructors) {
       const useCase = this.useCase(constructor);
+      const useGenerationApproach =
+        Configuration.approach() === Approach.generation;
+
+      if (useGenerationApproach) {
+        output += this.useCaseAnnotation(constructor);
+      }
+
       output += useCase + "\n\n";
     }
 
