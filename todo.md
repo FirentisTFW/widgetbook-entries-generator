@@ -1,2 +1,2 @@
-- Slider or input for numbers - a setting
-- Ommiting widget prefixes
+- Slider or input for numbers - a setting (an option to choose a knob for each property)
+- Omitting widget prefixes
