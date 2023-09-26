@@ -1,21 +1,21 @@
-enum DoubleKnobType {
+enum NumberKnobType {
   input,
   slider,
   askEachTime,
 }
 
-function parseDoubleKnobType(knobType: string): DoubleKnobType {
+function parseNumberKnobType(knobType: string): NumberKnobType {
   // TODO Consider better way of handling this. Does TypeScript offer something cool here?
   switch (knobType) {
     case "Input":
-      return DoubleKnobType.input;
+      return NumberKnobType.input;
     case "Slider":
-      return DoubleKnobType.slider;
+      return NumberKnobType.slider;
     case "Ask each time":
-      return DoubleKnobType.askEachTime;
+      return NumberKnobType.askEachTime;
   }
 
-  throw new Error(`This double knob type is not handled: ${knobType}`);
+  throw new Error(`This number knob type is not handled: ${knobType}`);
 }
 
-export { DoubleKnobType, parseDoubleKnobType };
+export { NumberKnobType, parseNumberKnobType };

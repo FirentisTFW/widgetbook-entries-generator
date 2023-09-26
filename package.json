@@ -34,7 +34,12 @@
             "default": "Generation",
             "description": "Approach - in Manual you'll need to add widgets to the Widgetbook manually, in Generation build runner will do that for you."
           },          
-          "widgetbook-generator.doubleKnobType": {
+          "widgetbook-generator.barrelFileImport": {
+            "type": "string",
+            "default": "TODO",
+            "description": "Barrel widgets file import. This file exports all your widgets. E.g. \"package:my_common_ui/widgets.dart\"."
+          },    
+          "widgetbook-generator.numberKnobType": {
             "type": "string",
             "enum": [
               "Input",
@@ -42,13 +47,8 @@
               "Ask each time"
             ],
             "default": "Input",
-            "description": "A knob type which will be used for fields of type double."
+            "description": "A knob type which will be used for fields of type double and int."
           },
-          "widgetbook-generator.barrelFileImport": {
-            "type": "string",
-            "default": "TODO",
-            "description": "Barrel widgets file import. This file exports all your widgets. E.g. \"package:my_common_ui/widgets.dart\"."
-          },    
           "widgetbook-generator.rootDirectoryName": {
             "type": "string",
             "default": "TODO",
