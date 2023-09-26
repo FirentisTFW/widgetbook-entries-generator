@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { Approach, parseApproach } from "./enums/approach";
+import { DoubleKnobType, parseDoubleKnobType } from "./enums/double_knob_type";
 import {
   WidgetbookVersion,
   parseWidgetbookVersion,
@@ -8,7 +9,8 @@ import {
 const configurationEntry = "widgetbook-generator";
 
 const approachKey = "approach";
-const barrelFileImport = "barrelFileImport";
+const barrelFileImportKey = "barrelFileImport";
+const doubleKnobTypeKey = "doubleKnobType";
 const rootProjectDirectoryNameKey = "rootDirectoryName";
 const widgetbookVersionKey = "widgetbookVersion";
 const widgetsDirectoryPathKey = "widgetsDirectoryPath";
@@ -28,7 +30,13 @@ class Configuration {
   }
 
   static barrelFileImport(): string {
-    return Configuration.readSetting(barrelFileImport);
+    return Configuration.readSetting(barrelFileImportKey);
+  }
+
+  static doubleKnobType(): DoubleKnobType {
+    const knobType = Configuration.readSetting<string>(doubleKnobTypeKey);
+
+    return parseDoubleKnobType(knobType);
   }
 
   static rootProjectDirectoryName(): string {
