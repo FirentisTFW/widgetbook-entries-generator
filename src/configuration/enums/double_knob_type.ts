@@ -1,7 +1,6 @@
 enum NumberKnobType {
   input,
   slider,
-  askEachTime,
 }
 
 function parseNumberKnobType(knobType: string): NumberKnobType {
@@ -11,8 +10,6 @@ function parseNumberKnobType(knobType: string): NumberKnobType {
       return NumberKnobType.input;
     case "Slider":
       return NumberKnobType.slider;
-    case "Ask each time":
-      return NumberKnobType.askEachTime;
   }
 
   throw new Error(`This number knob type is not handled: ${knobType}`);

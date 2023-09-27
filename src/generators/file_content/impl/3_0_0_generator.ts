@@ -59,12 +59,12 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
     return output;
   }
 
-  private useCaseName(constructorName: string | null): string {
-    return `useCase${this.clazz.name}${pascalCase(constructorName ?? "")}`;
-  }
-
   protected knobForEnum(name: string, type: string) {
     return `context.knobs.options(label: '${name}', options: ${type}.values)`;
+  }
+
+  private useCaseName(constructorName: string | null): string {
+    return `useCase${this.clazz.name}${pascalCase(constructorName ?? "")}`;
   }
 }
 

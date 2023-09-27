@@ -43,8 +43,7 @@
             "type": "string",
             "enum": [
               "Input",
-              "Slider",
-              "Ask each time"
+              "Slider"
             ],
             "default": "Input",
             "description": "A knob type which will be used for fields of type double and int."

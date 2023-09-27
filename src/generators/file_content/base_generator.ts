@@ -1,6 +1,7 @@
 import { sentenceCase } from "change-case";
 import { Configuration } from "../../configuration/configuration";
 import { Approach } from "../../configuration/enums/approach";
+import { NumberKnobType } from "../../configuration/enums/double_knob_type";
 import {
   DartClass,
   DartClassConstructor,
@@ -28,14 +29,8 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
       (fieldName) =>
         `context.knobs.text(label: '${fieldName}', initialValue: '${fieldName}')`,
     ],
-    [
-      "int",
-      (fieldName) => `context.knobs.number(label: '${fieldName}').toInt()`,
-    ],
-    [
-      "double",
-      (fieldName) => `context.knobs.number(label: '${fieldName}').toDouble()`,
-    ],
+    ["int", (fieldName) => this.numberKnob(fieldName, ".toInt()")],
+    ["double", (fieldName) => this.numberKnob(fieldName, ".toDouble()")],
     ["ValueChanged", () => `(_) {}`],
     ["VoidCallback", () => `() {}`],
     ["Key", (fieldName) => `const ValueKey('${fieldName}')`],
@@ -56,15 +51,10 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
       "String",
       (fieldName) => `context.knobs.nullableText(label: '${fieldName}')`,
     ],
-    [
-      "int",
-      (fieldName) =>
-        `context.knobs.nullableNumber(label: '${fieldName}')?.toInt()`,
-    ],
+    ["int", (fieldName) => this.nullableNumberKnob(fieldName, "?.toInt()")],
     [
       "double",
-      (fieldName) =>
-        `context.knobs.nullableNumber(label: '${fieldName}')?.toDouble()`,
+      (fieldName) => this.nullableNumberKnob(fieldName, "?.toDouble()"),
     ],
   ]);
 
@@ -142,6 +132,28 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
 
     // If none of the cases from [knobForType] matches, it's probably a custom enum.
     return this.knobForEnum(name, type);
+  }
+
+  protected numberKnob(fieldName: string, castSuffix: string): string {
+    const knobType = Configuration.numberKnobType();
+
+    switch (knobType) {
+      case NumberKnobType.input:
+        return `context.knobs.number(label: '${fieldName}')${castSuffix}`;
+      case NumberKnobType.slider:
+        return `context.knobs.slider(label: '${fieldName}')${castSuffix}`;
+    }
+  }
+
+  protected nullableNumberKnob(fieldName: string, castSuffix: string): string {
+    const knobType = Configuration.numberKnobType();
+
+    switch (knobType) {
+      case NumberKnobType.input:
+        return `context.knobs.nullableNumber(label: '${fieldName}')${castSuffix}`;
+      case NumberKnobType.slider:
+        return `context.knobs.nullableSlider(label: '${fieldName}')${castSuffix}`;
+    }
   }
 }
 

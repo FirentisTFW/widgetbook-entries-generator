@@ -1,4 +1,6 @@
 import { camelCase, pascalCase } from "change-case";
+import { Configuration } from "../../../configuration/configuration";
+import { NumberKnobType } from "../../../configuration/enums/double_knob_type";
 import { DartClassConstructor } from "../../../data/dart_class";
 import { BaseFileContentGenerator } from "../base_generator";
 
@@ -9,13 +11,11 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
       (fieldName) =>
         `context.knobs.string(label: '${fieldName}', initialValue: '${fieldName}')`
     );
-    this.knobForType.set(
-      "double",
-      (fieldName) => `context.knobs.double.input(label: '${fieldName}')`
+    this.knobForType.set("double", (fieldName) =>
+      this.numberKnob(fieldName, "")
     );
-    this.knobForType.set(
-      "int",
-      (fieldName) => `context.knobs.double.input(label: '${fieldName}').toInt()`
+    this.knobForType.set("int", (fieldName) =>
+      this.numberKnob(fieldName, ".toInt()")
     );
 
     this.knobForNullableType.set(
@@ -26,14 +26,11 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
       "String",
       (fieldName) => `context.knobs.stringOrNull(label: '${fieldName}')`
     );
-    this.knobForNullableType.set(
-      "double",
-      (fieldName) => `context.knobs.doubleOrNull.input(label: '${fieldName}')`
+    this.knobForNullableType.set("double", (fieldName) =>
+      this.nullableNumberKnob(fieldName, "")
     );
-    this.knobForNullableType.set(
-      "int",
-      (fieldName) =>
-        `context.knobs.doubleOrNull.input(label: '${fieldName}')?.toInt()`
+    this.knobForNullableType.set("int", (fieldName) =>
+      this.nullableNumberKnob(fieldName, "?.toInt()")
     );
   }
 
@@ -94,12 +91,33 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
     return output;
   }
 
-  private useCaseName(constructorName: string | null): string {
-    return `useCase${this.clazz.name}${pascalCase(constructorName ?? "")}`;
-  }
-
   protected knobForEnum(name: string, type: string) {
     return `context.knobs.list(label: '${name}', options: ${type}.values)`;
+  }
+
+  protected numberKnob(fieldName: string, castSuffix: string): string {
+    const knobType = Configuration.numberKnobType();
+
+    switch (knobType) {
+      case NumberKnobType.input:
+        return `context.knobs.double.input(label: '${fieldName}')${castSuffix}`;
+      case NumberKnobType.slider:
+        return `context.knobs.double.slider(label: '${fieldName}')${castSuffix}`;
+    }
+  }
+  protected nullableNumberKnob(fieldName: string, castSuffix: string): string {
+    const knobType = Configuration.numberKnobType();
+
+    switch (knobType) {
+      case NumberKnobType.input:
+        return `context.knobs.doubleOrNull.input(label: '${fieldName}')${castSuffix}`;
+      case NumberKnobType.slider:
+        return `context.knobs.doubleOrNull.slider(label: '${fieldName}')${castSuffix}`;
+    }
+  }
+
+  private useCaseName(constructorName: string | null): string {
+    return `useCase${this.clazz.name}${pascalCase(constructorName ?? "")}`;
   }
 }
 
