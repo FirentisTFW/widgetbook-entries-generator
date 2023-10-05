@@ -1,9 +1,12 @@
 # Change Log
 
-All notable changes to the "widgetbook-generator" extension will be documented in this file.
+## 0.0.2
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- Fixed nullable number knobs.
+- Added widgetbook approach (manual/generation) to settings.
+- Added a setting for number knob (input/slider).
+- Added initial value for non-nullable text knobs.
 
-## [Unreleased]
+## 0.0.1
 
-- Initial release
+- First internal release.
