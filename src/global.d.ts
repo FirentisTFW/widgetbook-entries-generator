@@ -8,6 +8,8 @@ declare global {
 
     substringAfter(text: string): string;
 
+    substringBetween(start: string, end: string): string;
+
     substringUpTo(text: string): string;
 
     substringUpToAndIncluding(text: string): string;

@@ -17,6 +17,10 @@ String.prototype.substringAfter = function (text: string) {
   return this.substring(this.indexOf(text) + text.length);
 };
 
+String.prototype.substringBetween = function (start: string, end: string) {
+  return this.substring(this.indexOf(start) + start.length, this.indexOf(end));
+};
+
 String.prototype.substringUpTo = function (text: string) {
   return this.substring(0, this.indexOf(text));
 };
@@ -25,7 +29,7 @@ String.prototype.substringUpToAndIncluding = function (text: string) {
   return this.substring(0, this.indexOf(text) + text.length);
 };
 
-Array.prototype.whereType = function <T>() {
+Array.prototype.whereType = function <T>(): Array<T> {
   return this.filter((element): element is T => !!element);
 };
 
