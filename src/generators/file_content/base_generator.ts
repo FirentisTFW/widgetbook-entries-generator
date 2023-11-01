@@ -33,6 +33,13 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     ["double", (fieldName) => this.numberKnob(fieldName, ".toDouble()")],
     ["ValueChanged", () => `(_) {}`],
     ["VoidCallback", () => `() {}`],
+    [
+      "Duration",
+      (fieldName) =>
+        `Duration(milliseconds: ` +
+        this.numberKnob(`${fieldName} in milliseconds`, ".toInt()") +
+        `,)`,
+    ],
     ["Key", (fieldName) => `const ValueKey('${fieldName}')`],
   ]);
 
