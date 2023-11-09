@@ -53,7 +53,6 @@ function parseLinesToClassFields(input: Array<string>): Array<DartClassField> {
     .filter((line) => line !== "");
 
   return fieldListLines.map((line) => {
-    // FIXME Add unit tests for functions with multiple parameters
     const lineParts = line.trim().split(" ").slice(1);
     const name = lineParts.pop()?.replace(";", "") ?? "";
     const type = lineParts.join(" ");

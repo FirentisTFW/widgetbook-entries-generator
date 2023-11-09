@@ -198,6 +198,45 @@ describe("parseLinesToClassFields", () => {
 
       expect(parseLinesToClassFields(lines)).toEqual([]);
     });
+
+    test("with fields that are functions, returns them", () => {
+      const lines = [
+        "class Button extends StatelessWidget {",
+        "  final void Function() fun1;",
+        "  final CustomClass Function(_) fun2;",
+        "  final CustomClass Function(CustomClass param1, CustomClass param2)? fun3;",
+        "  final (CustomClass, CustomClass2) Function(CustomClass param1, param2)? fun4;",
+        "",
+        "  const Button({",
+        "    super.key,",
+        "    required this.fun1,",
+        "    required this.fun2,",
+        "    this.fun3,",
+        "    this.fun4,",
+        "  });",
+        "",
+        "  @override",
+        "  Widget build(BuildContext context) {",
+        "    return const SizedBox.shrink();",
+        "  }",
+        "}",
+      ];
+
+      expect(parseLinesToClassFields(lines)).toEqual([
+        new DartClassField("fun1", "void Function()"),
+        new DartClassField("fun2", "CustomClass Function(_)"),
+        new DartClassField(
+          "fun3",
+          "CustomClass Function(CustomClass param1, CustomClass param2)",
+          true
+        ),
+        new DartClassField(
+          "fun4",
+          "(CustomClass, CustomClass2) Function(CustomClass param1, param2)",
+          true
+        ),
+      ]);
+    });
   });
   describe("when passed a StatefulWidget", () => {
     test("with fields after constructor, returns them", () => {
