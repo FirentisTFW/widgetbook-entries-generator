@@ -132,6 +132,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
       knob = this.knobForNullableType.get(type)?.(name);
     }
     knob ??= this.knobForType.get(type)?.(name);
+    knob ??= this.checkForFunction(type);
 
     if (knob !== undefined) {
       return knob;
@@ -139,6 +140,26 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
 
     // If none of the cases from [knobForType] matches, it's probably a custom enum.
     return this.knobForEnum(name, type);
+  }
+
+  private checkForFunction(type: string): string | undefined {
+    const functionRegex = /.*\bFunction\s*\(.*/;
+
+    if (!functionRegex.test(type)) return undefined;
+
+    const parametersSeparator = ",";
+    const parameters = type
+      .substringAfter("Function")
+      .substringBetween("(", ")");
+    const parametersCount =
+      parameters === "" ? 0 : parameters.split(parametersSeparator).length;
+
+    const underscoresForParameters = Array.from(
+      { length: parametersCount },
+      (_, i) => "_".repeat(i + 1)
+    ).join(", ");
+
+    return `(${underscoresForParameters}) {}`;
   }
 
   protected numberKnob(fieldName: string, castSuffix: string): string {
