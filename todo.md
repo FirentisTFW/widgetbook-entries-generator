@@ -1,1 +1,2 @@
 - Omitting widget prefixes
+- Searching for custom typedefs (in the current file) when encountering unknown type
