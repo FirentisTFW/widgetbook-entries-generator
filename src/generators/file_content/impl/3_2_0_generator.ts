@@ -1,7 +1,7 @@
 import { camelCase, pascalCase } from "change-case";
 import { Configuration } from "../../../configuration/configuration";
 import { NumberKnobType } from "../../../configuration/enums/double_knob_type";
-import { DartClassConstructor } from "../../../data/dart_class";
+import { DartClassConstructor, DartClassField } from "../../../data/dart_class";
 import { BaseFileContentGenerator } from "../base_generator";
 
 class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
@@ -91,8 +91,11 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
     return output;
   }
 
-  protected knobForEnum(name: string, type: string) {
-    return `context.knobs.list(label: '${name}', options: ${type}.values)`;
+  protected knobForEnum(field: DartClassField) {
+    if (field.nullable) {
+      return `context.knobs.listOrNull(label: '${field.name}', options: ${field.type}.values)`;
+    }
+    return `context.knobs.list(label: '${field.name}', options: ${field.type}.values)`;
   }
 
   protected numberKnob(fieldName: string, castSuffix: string): string {
