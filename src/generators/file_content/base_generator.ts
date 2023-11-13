@@ -73,7 +73,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
 
   abstract useCase(constructor: DartClassConstructor): string;
 
-  protected abstract knobForEnum(field: DartClassField): string;
+  protected abstract knobForEnum(name: string, type: string): string;
 
   /**
    * This method should be overriden in child classes in order to apply changes that happened
@@ -140,7 +140,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     }
 
     // If none of the cases from [knobForType] matches, it's probably a custom enum.
-    return this.knobForEnum(field);
+    return this.knobForEnum(name, type);
   }
 
   private checkForFunction(type: string): string | undefined {

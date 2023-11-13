@@ -1,5 +1,5 @@
 import { camelCase, pascalCase } from "change-case";
-import { DartClassConstructor, DartClassField } from "../../../data/dart_class";
+import { DartClassConstructor } from "../../../data/dart_class";
 import { BaseFileContentGenerator } from "../base_generator";
 
 class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
@@ -59,8 +59,8 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
     return output;
   }
 
-  protected knobForEnum(field: DartClassField) {
-    return `context.knobs.options(label: '${field.name}', options: ${field.type}.values)`;
+  protected knobForEnum(name: string, type: string) {
+    return `context.knobs.options(label: '${name}', options: ${type}.values)`;
   }
 
   private useCaseName(constructorName: string | null): string {
