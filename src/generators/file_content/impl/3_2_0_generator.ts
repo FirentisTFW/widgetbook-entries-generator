@@ -91,10 +91,6 @@ class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
     return output;
   }
 
-  protected knobForEnum(name: string, type: string) {
-    return `context.knobs.list(label: '${name}', options: ${type}.values)`;
-  }
-
   protected numberKnob(fieldName: string, castSuffix: string): string {
     const knobType = Configuration.numberKnobType();
 

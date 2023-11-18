@@ -73,8 +73,6 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
 
   abstract useCase(constructor: DartClassConstructor): string;
 
-  protected abstract knobForEnum(name: string, type: string): string;
-
   /**
    * This method should be overriden in child classes in order to apply changes that happened
    * in different versions of widgetbook in relation to setup present in BaseFileContentGenerator.
@@ -140,7 +138,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     }
 
     // If none of the cases from [knobForType] matches, it's probably a custom enum.
-    return this.knobForEnum(name, type);
+    return this.knobForEnum(name, type, field.nullable);
   }
 
   private checkForFunction(type: string): string | undefined {
@@ -161,6 +159,13 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     ).join(", ");
 
     return `(${underscoresForParameters}) {}`;
+  }
+
+  protected knobForEnum(name: string, type: string, nullable: boolean): string {
+    if (nullable) {
+      return `context.knobs.listOrNull(label: '${name}', options: [null, ...${type}.values])`;
+    }
+    return `context.knobs.list(label: '${name}', options: ${type}.values)`;
   }
 
   protected numberKnob(fieldName: string, castSuffix: string): string {
