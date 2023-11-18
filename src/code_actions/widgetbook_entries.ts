@@ -11,10 +11,6 @@ class WidgetbookEntriesCodeActions implements vscode.CodeActionProvider {
         command: "widgetbook-generator.generate.widget",
         title: "Create widgetbook entry for this widget",
       },
-      {
-        command: "widgetbook-generator.generate.directory",
-        title: "Widgetbook: generate entry for each file in the directory",
-      },
     ];
 
     return commands.map((c) => {
