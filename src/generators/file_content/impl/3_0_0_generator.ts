@@ -5,7 +5,7 @@ import { BaseFileContentGenerator } from "../base_generator";
 class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
   manualComponentDeclaration(): string {
     let output = `
-    const ${camelCase(this.clazz.name)}Component = WidgetbookComponent(
+    final ${camelCase(this.clazz.name)}Component = WidgetbookComponent(
       name: '${this.clazz.name}',
       useCases: [
     `;
