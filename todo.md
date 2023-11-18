@@ -1,2 +1,4 @@
+- Generating use-cases for all widgets in a file (how to handle this when overriding a file?)
+- Formating code before copying it into the clipboard
 - Omitting widget prefixes
 - Searching for custom typedefs (in the current file) when encountering unknown type
