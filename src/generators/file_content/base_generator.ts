@@ -27,7 +27,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     [
       "String",
       (fieldName) =>
-        `context.knobs.text(label: '${fieldName}', initialValue: '${fieldName}')`,
+        `context.knobs.string(label: '${fieldName}', initialValue: '${fieldName}')`,
     ],
     ["int", (fieldName) => this.numberKnob(fieldName, ".toInt()")],
     ["double", (fieldName) => this.numberKnob(fieldName, ".toDouble()")],
@@ -56,7 +56,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     ],
     [
       "String",
-      (fieldName) => `context.knobs.nullableText(label: '${fieldName}')`,
+      (fieldName) => `context.knobs.stringOrNull(label: '${fieldName}')`,
     ],
     ["int", (fieldName) => this.nullableNumberKnob(fieldName, "?.toInt()")],
     [
