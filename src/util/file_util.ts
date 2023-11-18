@@ -8,10 +8,16 @@ import { PathGeneratorFactory } from "../generators/path/factory";
 
 const ENCODING = "utf8";
 
-async function writeWidgetbookEntry(clazz: DartClass): Promise<void> {
+async function writeWidgetbookEntry(
+  clazz: DartClass,
+  widgetFilePath: string
+): Promise<void> {
   const pathGenerator = PathGeneratorFactory.create();
 
-  const filePath = pathGenerator.prepareWidgetbookEntryFilePath(clazz.name);
+  const filePath = pathGenerator.prepareWidgetbookEntryFilePath(
+    clazz.name,
+    widgetFilePath
+  );
 
   if (filePath === null) {
     // TODO Show error dialog or something

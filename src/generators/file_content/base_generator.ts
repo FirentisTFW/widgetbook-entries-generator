@@ -52,7 +52,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
   >([
     [
       "bool",
-      (fieldName) => `context.knobs.nullableBoolean(label: '${fieldName}')`,
+      (fieldName) => `context.knobs.booleanOrNull(label: '${fieldName}')`,
     ],
     [
       "String",

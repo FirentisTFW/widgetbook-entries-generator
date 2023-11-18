@@ -30,7 +30,7 @@ async function generateWidgetbookEntriesForDirectoryImpl(
 
       const clazz = parseTextToClass(fileContentString);
 
-      await writeWidgetbookEntry(clazz);
+      await writeWidgetbookEntry(clazz, filePath);
     } else if (fileType === vscode.FileType.Directory) {
       const subdirectoryPath = path.join(directoryPath, fileName);
 

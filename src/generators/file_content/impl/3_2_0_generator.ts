@@ -6,31 +6,11 @@ import { BaseFileContentGenerator } from "../base_generator";
 
 class FileContentGenerator3_2_0 extends BaseFileContentGenerator {
   applyMigrations(): void {
-    this.knobForType.set(
-      "String",
-      (fieldName) =>
-        `context.knobs.string(label: '${fieldName}', initialValue: '${fieldName}')`
-    );
     this.knobForType.set("double", (fieldName) =>
       this.numberKnob(fieldName, "")
     );
-    this.knobForType.set("int", (fieldName) =>
-      this.numberKnob(fieldName, ".toInt()")
-    );
-
-    this.knobForNullableType.set(
-      "bool",
-      (fieldName) => `context.knobs.booleanOrNull(label: '${fieldName}')`
-    );
-    this.knobForNullableType.set(
-      "String",
-      (fieldName) => `context.knobs.stringOrNull(label: '${fieldName}')`
-    );
     this.knobForNullableType.set("double", (fieldName) =>
       this.nullableNumberKnob(fieldName, "")
-    );
-    this.knobForNullableType.set("int", (fieldName) =>
-      this.nullableNumberKnob(fieldName, "?.toInt()")
     );
   }
 

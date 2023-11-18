@@ -15,7 +15,7 @@ async function generateWidgetbookEntryForWidgetInScope(): Promise<void> {
 
   const clazz = parseTextToClass(fileContentFromCurrentLine);
 
-  await writeWidgetbookEntry(clazz);
+  await writeWidgetbookEntry(clazz, activeEditor.document.fileName);
 }
 
 export { generateWidgetbookEntryForWidgetInScope };

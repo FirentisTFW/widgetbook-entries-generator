@@ -1,5 +1,8 @@
 interface PathGenerator {
-  prepareWidgetbookEntryFilePath(className: string): string | null;
+  prepareWidgetbookEntryFilePath(
+    className: string,
+    widgetFilePath: string
+  ): string | null;
 }
 
 export { PathGenerator };
