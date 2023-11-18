@@ -8,13 +8,6 @@ async function generateWidgetbookEntriesForDirectory(
 ): Promise<void> {
   const directoryPath = uri.fsPath;
 
-  await generateWidgetbookEntriesForDirectoryImpl(directoryPath);
-}
-
-// FIXME Refactor the naming
-async function generateWidgetbookEntriesForDirectoryImpl(
-  directoryPath: string
-): Promise<void> {
   const files = await vscode.workspace.fs.readDirectory(
     vscode.Uri.file(directoryPath)
   );
@@ -34,7 +27,9 @@ async function generateWidgetbookEntriesForDirectoryImpl(
     } else if (fileType === vscode.FileType.Directory) {
       const subdirectoryPath = path.join(directoryPath, fileName);
 
-      await generateWidgetbookEntriesForDirectoryImpl(subdirectoryPath);
+      await generateWidgetbookEntriesForDirectory(
+        vscode.Uri.file(subdirectoryPath)
+      );
     }
   }
 }
