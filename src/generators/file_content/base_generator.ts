@@ -41,6 +41,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
         `,)`,
     ],
     ["Key", (fieldName) => `const ValueKey('${fieldName}')`],
+    ["Color", (fieldName) => `context.knobs.color(label: '${fieldName}')`],
   ]);
 
   /**
