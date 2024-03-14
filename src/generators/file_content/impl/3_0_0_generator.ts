@@ -1,4 +1,4 @@
-import { camelCase, pascalCase } from "change-case";
+import { camelCase } from "change-case";
 import { DartClassConstructor } from "../../../data/dart_class";
 import { BaseFileContentGenerator } from "../base_generator";
 
@@ -57,10 +57,6 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
     }`;
 
     return output;
-  }
-
-  private useCaseName(constructorName: string | null): string {
-    return `useCase${this.clazz.name}${pascalCase(constructorName ?? "")}`;
   }
 }
 

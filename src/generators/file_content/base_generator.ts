@@ -1,4 +1,4 @@
-import { sentenceCase } from "change-case";
+import { pascalCase, sentenceCase } from "change-case";
 import { Configuration } from "../../configuration/configuration";
 import { Approach } from "../../configuration/enums/approach";
 import { NumberKnobType } from "../../configuration/enums/double_knob_type";
@@ -77,7 +77,6 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
    * This method should be overriden in child classes in order to apply changes that happened
    * in different versions of widgetbook in relation to setup present in BaseFileContentGenerator.
    */
-  // FIXME Find a better way to do this, so that version 3.3.0 won't need to repeat the same migrations as 3.2.0
   protected applyMigrations(): void {
     // To be overriden in child classes.
   }
@@ -188,6 +187,10 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
       case NumberKnobType.slider:
         return `context.knobs.nullableSlider(label: '${fieldName}')${castSuffix}`;
     }
+  }
+
+  protected useCaseName(constructorName: string | null): string {
+    return `useCase${this.clazz.name}${pascalCase(constructorName ?? "")}`;
   }
 }
 
