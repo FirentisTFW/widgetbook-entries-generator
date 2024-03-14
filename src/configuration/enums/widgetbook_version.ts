@@ -4,7 +4,6 @@ enum WidgetbookVersion {
 }
 
 function parseWidgetbookVersion(version: string): WidgetbookVersion {
-  // TODO Consider better way of handling this. Does TypeScript offer something cool here?
   switch (version) {
     case "3.0.0":
       return WidgetbookVersion.v3_0_0;

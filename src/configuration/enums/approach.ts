@@ -4,7 +4,6 @@ enum Approach {
 }
 
 function parseApproach(approach: string): Approach {
-  // TODO Consider better way of handling this. Does TypeScript offer something cool here?
   switch (approach) {
     case "Manual":
       return Approach.manual;

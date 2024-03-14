@@ -4,7 +4,6 @@ enum NumberKnobType {
 }
 
 function parseNumberKnobType(knobType: string): NumberKnobType {
-  // TODO Consider better way of handling this. Does TypeScript offer something cool here?
   switch (knobType) {
     case "Input":
       return NumberKnobType.input;
