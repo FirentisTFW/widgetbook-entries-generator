@@ -5,6 +5,8 @@ import { FileContentGenerator3_0_0 } from "./3_0_0_generator";
 
 class FileContentGenerator3_2_0 extends FileContentGenerator3_0_0 {
   applyMigrations(): void {
+    super.applyMigrations();
+
     this.knobForType.set("double", (fieldName) =>
       this.numberKnob(fieldName, "")
     );
