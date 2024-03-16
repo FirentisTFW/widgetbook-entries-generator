@@ -1,33 +1,17 @@
 class DartClass {
-  name: string;
-  fields: Array<DartClassField>;
-  constructors: Array<DartClassConstructor>;
-
   constructor(
-    name: string,
-    fields: Array<DartClassField>,
-    constructors: Array<DartClassConstructor>
-  ) {
-    this.name = name;
-    this.fields = fields;
-    this.constructors = constructors;
-  }
+    public name: string,
+    public fields: Array<DartClassField>,
+    public constructors: Array<DartClassConstructor>
+  ) {}
 }
 
 class DartClassConstructor {
-  named: boolean;
-  fields: Array<DartClassField>;
-  name: string | null;
-
   constructor(
-    named: boolean,
-    fields: Array<DartClassField>,
-    name: string | null
-  ) {
-    this.named = named;
-    this.fields = fields;
-    this.name = name;
-  }
+    public named: boolean,
+    public fields: Array<DartClassField>,
+    public name: string | null
+  ) {}
 
   get useCaseName(): string {
     return this.named ? `.${this.name}` : "default";
@@ -35,15 +19,11 @@ class DartClassConstructor {
 }
 
 class DartClassField {
-  name: string;
-  type: string;
-  nullable: boolean;
-
-  constructor(name: string, type: string, nullable = false) {
-    this.name = name;
-    this.type = type;
-    this.nullable = nullable;
-  }
+  constructor(
+    public name: string,
+    public type: string,
+    public nullable = false
+  ) {}
 }
 
 export { DartClass, DartClassConstructor, DartClassField };
