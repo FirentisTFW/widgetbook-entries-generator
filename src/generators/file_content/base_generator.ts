@@ -79,6 +79,8 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
   /**
    * This method should be overriden in child classes in order to apply changes that happened
    * in different versions of widgetbook in relation to setup present in BaseFileContentGenerator.
+   *
+   * `super.applyMigrations()` should always be called first.
    */
   protected applyMigrations(): void {
     // To be overriden in child classes.
