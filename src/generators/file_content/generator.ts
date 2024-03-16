@@ -1,12 +1,6 @@
-import {
-  DartClass,
-  DartClassConstructor,
-  DartClassField,
-} from "../../data/dart_class";
+import { DartClassConstructor, DartClassField } from "../../data/dart_class";
 
 interface FileContentGenerator {
-  clazz: DartClass;
-
   imports(): string;
 
   manualComponentDeclaration(): string;

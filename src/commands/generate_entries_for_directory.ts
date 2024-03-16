@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { FileContentGeneratorFactory } from "../generators/file_content/factory";
 import { parseTextToClass } from "../util/dart_class_parser";
 import { writeWidgetbookEntry } from "../util/file_util";
 import path = require("path");
@@ -23,7 +24,9 @@ async function generateWidgetbookEntriesForDirectory(
 
       const clazz = parseTextToClass(fileContentString);
 
-      await writeWidgetbookEntry(clazz, filePath);
+      const fileContentGenerator = FileContentGeneratorFactory.create(clazz);
+
+      await writeWidgetbookEntry(clazz, filePath, fileContentGenerator);
     } else if (fileType === vscode.FileType.Directory) {
       const subdirectoryPath = path.join(directoryPath, fileName);
 

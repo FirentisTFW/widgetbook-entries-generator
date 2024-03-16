@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { FileContentGeneratorFactory } from "../generators/file_content/factory";
 import { parseTextToClass } from "../util/dart_class_parser";
 import { writeWidgetbookEntry } from "../util/file_util";
 
@@ -15,7 +16,13 @@ async function generateWidgetbookEntryForWidgetInScope(): Promise<void> {
 
   const clazz = parseTextToClass(fileContentFromCurrentLine);
 
-  await writeWidgetbookEntry(clazz, activeEditor.document.fileName);
+  const fileContentGenerator = FileContentGeneratorFactory.create(clazz);
+
+  await writeWidgetbookEntry(
+    clazz,
+    activeEditor.document.fileName,
+    fileContentGenerator
+  );
 }
 
 export { generateWidgetbookEntryForWidgetInScope };

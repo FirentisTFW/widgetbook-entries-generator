@@ -3,14 +3,15 @@ import * as vscode from "vscode";
 import { Configuration } from "../configuration/configuration";
 import { Approach } from "../configuration/enums/approach";
 import { DartClass } from "../data/dart_class";
-import { FileContentGeneratorFactory } from "../generators/file_content/factory";
+import { FileContentGenerator } from "../generators/file_content/generator";
 import { PathGeneratorFactory } from "../generators/path/factory";
 
 const ENCODING = "utf8";
 
 async function writeWidgetbookEntry(
   clazz: DartClass,
-  widgetFilePath: string
+  widgetFilePath: string,
+  fileContentGenerator: FileContentGenerator
 ): Promise<void> {
   const pathGenerator = PathGeneratorFactory.create();
 
@@ -24,7 +25,7 @@ async function writeWidgetbookEntry(
     return;
   }
 
-  const fileContent = prepareWidgetbookEntryFor(clazz);
+  const fileContent = prepareWidgetbookEntry(fileContentGenerator);
 
   if (existsSync(filePath)) {
     const shouldOverrideFile = await showOverrideFileDialog(fileContent);
@@ -43,7 +44,8 @@ async function writeWidgetbookEntry(
 async function showOverrideFileDialog(fileContent: string): Promise<boolean> {
   const yesOption = "YES";
   const noOption = `NO`;
-  const copyOption = "NO, COPY GENERATED CONTENT TO THE CLIPBOARD";
+  const copyOption =
+    "NO, COPY GENERATED CONTENT (UNFORMATTED) TO THE CLIPBOARD";
 
   const result = await vscode.window.showQuickPick(
     [yesOption, noOption, copyOption],
@@ -74,8 +76,9 @@ function delay(milliseconds: number) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-function prepareWidgetbookEntryFor(clazz: DartClass): string {
-  const fileContentGenerator = FileContentGeneratorFactory.create(clazz);
+function prepareWidgetbookEntry(
+  fileContentGenerator: FileContentGenerator
+): string {
   const useGenerationApproach =
     Configuration.approach() === Approach.generation;
 

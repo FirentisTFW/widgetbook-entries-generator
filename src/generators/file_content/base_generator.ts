@@ -2,6 +2,7 @@ import { pascalCase, sentenceCase } from "change-case";
 import { Configuration } from "../../configuration/configuration";
 import { Approach } from "../../configuration/enums/approach";
 import { NumberKnobType } from "../../configuration/enums/double_knob_type";
+import { CustomKnob } from "../../data/custom_knob";
 import {
   DartClass,
   DartClassConstructor,
@@ -10,11 +11,28 @@ import {
 import { FileContentGenerator } from "./generator";
 
 abstract class BaseFileContentGenerator implements FileContentGenerator {
-  clazz: DartClass;
+  protected clazz: DartClass;
+  private customKnobs: Array<CustomKnob> = [];
 
-  constructor(clazz: DartClass) {
+  constructor(clazz: DartClass, customKnobs: Array<CustomKnob> = []) {
     this.clazz = clazz;
+    this.customKnobs = customKnobs;
     this.applyMigrations();
+    this.applyCustomKnobs();
+  }
+
+  private applyCustomKnobs() {
+    for (const customKnob of this.customKnobs) {
+      if (customKnob.nullable) {
+        this.knobForNullableType.set(customKnob.type, (fieldName) =>
+          customKnob.value.replace("$fieldName", fieldName)
+        );
+      } else {
+        this.knobForType.set(customKnob.type, (fieldName) =>
+          customKnob.value.replace("$fieldName", fieldName)
+        );
+      }
+    }
   }
 
   /**
