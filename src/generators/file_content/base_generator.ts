@@ -42,6 +42,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     ],
     ["Key", (fieldName) => `const ValueKey('${fieldName}')`],
     ["Color", (fieldName) => `context.knobs.color(label: '${fieldName}')`],
+    ["Widget", () => `const SizedBox.shrink()`],
   ]);
 
   /**
@@ -64,6 +65,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
       "double",
       (fieldName) => this.nullableDoubleKnob(fieldName, "?.toDouble()"),
     ],
+    ["Widget", () => `const SizedBox.shrink()`],
   ]);
 
   protected widgetbookAnnotation = "widgetbook";
