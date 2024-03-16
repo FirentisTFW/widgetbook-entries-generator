@@ -4,6 +4,7 @@ import { DartClass } from "../../data/dart_class";
 import { FileContentGenerator } from "./generator";
 import { FileContentGenerator3_0_0 } from "./impl/3_0_0_generator";
 import { FileContentGenerator3_2_0 } from "./impl/3_2_0_generator";
+import { FileContentGenerator3_4_0 } from "./impl/3_4_0_generator";
 
 abstract class FileContentGeneratorFactory {
   static create(clazz: DartClass): FileContentGenerator {
@@ -14,6 +15,8 @@ abstract class FileContentGeneratorFactory {
         return new FileContentGenerator3_0_0(clazz);
       case WidgetbookVersion.v3_2_0:
         return new FileContentGenerator3_2_0(clazz);
+      case WidgetbookVersion.v3_4_0:
+        return new FileContentGenerator3_4_0(clazz);
     }
   }
 }

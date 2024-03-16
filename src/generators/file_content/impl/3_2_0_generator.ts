@@ -8,10 +8,10 @@ class FileContentGenerator3_2_0 extends FileContentGenerator3_0_0 {
     super.applyMigrations();
 
     this.knobForType.set("double", (fieldName) =>
-      this.numberKnob(fieldName, "")
+      this.doubleKnob(fieldName, "")
     );
     this.knobForNullableType.set("double", (fieldName) =>
-      this.nullableNumberKnob(fieldName, "")
+      this.nullableDoubleKnob(fieldName, "")
     );
   }
 
@@ -24,7 +24,7 @@ class FileContentGenerator3_2_0 extends FileContentGenerator3_0_0 {
     `;
   }
 
-  protected numberKnob(fieldName: string, castSuffix: string): string {
+  protected doubleKnob(fieldName: string, castSuffix: string): string {
     const knobType = Configuration.numberKnobType();
 
     switch (knobType) {
@@ -34,7 +34,7 @@ class FileContentGenerator3_2_0 extends FileContentGenerator3_0_0 {
         return `context.knobs.double.slider(label: '${fieldName}')${castSuffix}`;
     }
   }
-  protected nullableNumberKnob(fieldName: string, castSuffix: string): string {
+  protected nullableDoubleKnob(fieldName: string, castSuffix: string): string {
     const knobType = Configuration.numberKnobType();
 
     switch (knobType) {

@@ -29,15 +29,15 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
       (fieldName) =>
         `context.knobs.string(label: '${fieldName}', initialValue: '${fieldName}')`,
     ],
-    ["int", (fieldName) => this.numberKnob(fieldName, ".toInt()")],
-    ["double", (fieldName) => this.numberKnob(fieldName, ".toDouble()")],
+    ["int", (fieldName) => this.doubleKnob(fieldName, ".toInt()")],
+    ["double", (fieldName) => this.doubleKnob(fieldName, ".toDouble()")],
     ["ValueChanged", () => `(_) {}`],
     ["VoidCallback", () => `() {}`],
     [
       "Duration",
       (fieldName) =>
         `Duration(milliseconds: ` +
-        this.numberKnob(`${fieldName} in milliseconds`, ".toInt()") +
+        this.doubleKnob(`${fieldName} in milliseconds`, ".toInt()") +
         `,)`,
     ],
     ["Key", (fieldName) => `const ValueKey('${fieldName}')`],
@@ -59,10 +59,10 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
       "String",
       (fieldName) => `context.knobs.stringOrNull(label: '${fieldName}')`,
     ],
-    ["int", (fieldName) => this.nullableNumberKnob(fieldName, "?.toInt()")],
+    ["int", (fieldName) => this.nullableDoubleKnob(fieldName, "?.toInt()")],
     [
       "double",
-      (fieldName) => this.nullableNumberKnob(fieldName, "?.toDouble()"),
+      (fieldName) => this.nullableDoubleKnob(fieldName, "?.toDouble()"),
     ],
   ]);
 
@@ -168,7 +168,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     return `context.knobs.list(label: '${name}', options: ${type}.values)`;
   }
 
-  protected numberKnob(fieldName: string, castSuffix: string): string {
+  protected doubleKnob(fieldName: string, castSuffix: string): string {
     const knobType = Configuration.numberKnobType();
 
     switch (knobType) {
@@ -179,7 +179,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     }
   }
 
-  protected nullableNumberKnob(fieldName: string, castSuffix: string): string {
+  protected nullableDoubleKnob(fieldName: string, castSuffix: string): string {
     const knobType = Configuration.numberKnobType();
 
     switch (knobType) {
