@@ -141,8 +141,8 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
       return knob;
     }
 
-    // If none of the cases from [knobForType] matches, it's probably a custom enum.
-    return this.knobForEnum(name, type, field.nullable);
+    // If none of the cases from `knobForType` matches, it's probably a custom enum.
+    return this.enumKnob(name, type, field.nullable);
   }
 
   private checkForFunction(type: string): string | undefined {
@@ -165,7 +165,7 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
     return `(${underscoresForParameters}) {}`;
   }
 
-  protected knobForEnum(name: string, type: string, nullable: boolean): string {
+  protected enumKnob(name: string, type: string, nullable: boolean): string {
     if (nullable) {
       return `context.knobs.listOrNull(label: '${name}', options: [null, ...${type}.values])`;
     }
