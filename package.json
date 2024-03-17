@@ -37,12 +37,17 @@
             ],
             "default": "Generation",
             "description": "Approach - in Manual you'll need to add widgets to the Widgetbook manually, in Generation build runner will do that for you."
-          },          
+          },
           "widgetbook-generator.barrelFileImport": {
             "type": "string",
             "default": "TODO",
             "description": "Barrel widgets file import. This file exports all your widgets. E.g. \"package:my_common_ui/widgets.dart\"."
-          },    
+          },
+          "widgetbook-generator.customKnobsPath": {
+            "type": "string",
+            "default": "",
+            "description": "Path to a JSON file with your custom knobs. Relative to the root workspace directory in VSCode. Leave empty if you don't have a file with custom knobs."
+          },
           "widgetbook-generator.numberKnobType": {
             "type": "string",
             "enum": [
@@ -77,21 +82,21 @@
     ],
     "menus": {
       "explorer/context": [
-				{
-					"command": "widgetbook-generator.generate.directory",
-					"group": "widgetbookGroup@1",
-					"when": "explorerResourceIsFolder"
-				}
-			]
+        {
+          "command": "widgetbook-generator.generate.directory",
+          "group": "widgetbookGroup@1",
+          "when": "explorerResourceIsFolder"
+        }
+      ]
     }
   },
   "scripts": {
     "esbuild": "npm run esbuild-base -- --sourcemap",
-		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
-		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "lint": "eslint src --ext ts",
     "test": "jest",
-		"vscode:prepublish": "npm run esbuild-base -- --minify",
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
     "watch": "tsc -watch -p ./"
   },
   "devDependencies": {

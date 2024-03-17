@@ -4,17 +4,16 @@ import { Configuration } from "../configuration/configuration";
 import { Approach } from "../configuration/enums/approach";
 import { DartClass } from "../data/dart_class";
 import { FileContentGenerator } from "../generators/file_content/generator";
-import { PathGeneratorFactory } from "../generators/path/factory";
+import { PathGenerator } from "../generators/path/generator";
 
 const ENCODING = "utf8";
 
 async function writeWidgetbookEntry(
   clazz: DartClass,
   widgetFilePath: string,
+  pathGenerator: PathGenerator,
   fileContentGenerator: FileContentGenerator
 ): Promise<void> {
-  const pathGenerator = PathGeneratorFactory.create();
-
   const filePath = pathGenerator.prepareWidgetbookEntryFilePath(
     clazz.name,
     widgetFilePath

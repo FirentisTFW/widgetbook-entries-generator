@@ -10,6 +10,7 @@ const configurationEntry = "widgetbook-generator";
 
 const approachKey = "approach";
 const barrelFileImportKey = "barrelFileImport";
+const customKnobsPathKey = "customKnobsPath";
 const numberKnobTypeKey = "numberKnobType";
 const rootProjectDirectoryNameKey = "rootDirectoryName";
 const widgetbookVersionKey = "widgetbookVersion";
@@ -31,6 +32,10 @@ class Configuration {
 
   static barrelFileImport(): string {
     return Configuration.readSetting(barrelFileImportKey);
+  }
+
+  static customKnobsPath(): string {
+    return Configuration.readSetting(customKnobsPathKey);
   }
 
   static numberKnobType(): NumberKnobType {

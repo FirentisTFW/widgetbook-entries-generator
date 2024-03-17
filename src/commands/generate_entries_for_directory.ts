@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { FileContentGeneratorFactory } from "../generators/file_content/factory";
+import { PathGeneratorFactory } from "../generators/path/factory";
+import { CustomKnobsProvider } from "../providers/custom_knobs_provider";
 import { parseTextToClass } from "../util/dart_class_parser";
 import { writeWidgetbookEntry } from "../util/file_util";
 import path = require("path");
@@ -24,9 +26,24 @@ async function generateWidgetbookEntriesForDirectory(
 
       const clazz = parseTextToClass(fileContentString);
 
-      const fileContentGenerator = FileContentGeneratorFactory.create(clazz);
+      const pathGenerator = PathGeneratorFactory.create();
+      const customKnobsFilePath = pathGenerator.prepareCustomKnobsFilePath(
+        uri.path
+      );
+      const customKnobs = await new CustomKnobsProvider().getCustomKnobs(
+        customKnobsFilePath
+      );
+      const fileContentGenerator = FileContentGeneratorFactory.create(
+        clazz,
+        customKnobs
+      );
 
-      await writeWidgetbookEntry(clazz, filePath, fileContentGenerator);
+      await writeWidgetbookEntry(
+        clazz,
+        filePath,
+        pathGenerator,
+        fileContentGenerator
+      );
     } else if (fileType === vscode.FileType.Directory) {
       const subdirectoryPath = path.join(directoryPath, fileName);
 

@@ -16,5 +16,16 @@ class PathGeneratorImpl implements PathGenerator {
 
     return outputFilePath;
   }
+
+  prepareCustomKnobsFilePath(currentPath: string): string | null {
+    const rootDirectory = Configuration.rootProjectDirectoryName();
+    const relativeFilePath = Configuration.customKnobsPath();
+    const projectRootPath =
+      currentPath.substringUpToAndIncluding(rootDirectory);
+
+    if (relativeFilePath === "") return null;
+
+    return `${projectRootPath}/${relativeFilePath}`;
+  }
 }
 export { PathGeneratorImpl };
