@@ -1,4 +1,5 @@
 import { snakeCase } from "change-case";
+import * as path from "path";
 import { Configuration } from "../../configuration/configuration";
 import { PathGenerator } from "./generator";
 
@@ -12,7 +13,11 @@ class PathGeneratorImpl implements PathGenerator {
     const classNameSnakeCase = snakeCase(className);
     const projectRootPath =
       widgetFilePath.substringUpToAndIncluding(rootDirectory);
-    const outputFilePath = `${projectRootPath}/${widgetbookWidgetsDirectory}/${classNameSnakeCase}.dart`;
+    const outputFilePath = path.join(
+      projectRootPath,
+      widgetbookWidgetsDirectory,
+      `${classNameSnakeCase}.dart`
+    );
 
     return outputFilePath;
   }
@@ -25,7 +30,7 @@ class PathGeneratorImpl implements PathGenerator {
 
     if (relativeFilePath === "") return null;
 
-    return `${projectRootPath}/${relativeFilePath}`;
+    return path.join(projectRootPath, relativeFilePath);
   }
 }
 export { PathGeneratorImpl };
