@@ -29,6 +29,10 @@ String.prototype.substringUpToAndIncluding = function (text: string) {
   return this.substring(0, this.indexOf(text) + text.length);
 };
 
+Array.prototype.whereNotNull = function <T>(): Array<T> {
+  return this.filter((item) => item !== null);
+};
+
 Array.prototype.whereType = function <T>(): Array<T> {
   return this.filter((element): element is T => !!element);
 };

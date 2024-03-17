@@ -17,6 +17,8 @@ declare global {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Array<T> {
+    whereNotNull(): Array<T>;
+
     whereType<T>(): Array<T>;
   }
 }

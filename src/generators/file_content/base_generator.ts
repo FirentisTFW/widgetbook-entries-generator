@@ -23,12 +23,13 @@ abstract class BaseFileContentGenerator implements FileContentGenerator {
 
   private applyCustomKnobs() {
     for (const customKnob of this.customKnobs) {
-      if (customKnob.nullable) {
-        this.knobForNullableType.set(customKnob.type, (fieldName) =>
+      if (customKnob.nonNullable) {
+        this.knobForType.set(customKnob.type, (fieldName) =>
           customKnob.value.replace("$fieldName", fieldName)
         );
-      } else {
-        this.knobForType.set(customKnob.type, (fieldName) =>
+      }
+      if (customKnob.nullable) {
+        this.knobForNullableType.set(customKnob.type, (fieldName) =>
           customKnob.value.replace("$fieldName", fieldName)
         );
       }
