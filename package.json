@@ -1,14 +1,27 @@
 {
   "name": "widgetbook-generator",
   "displayName": "Widgetbook Entries Generator",
+  "description": "Extension which helps you automate the process of adding new widget entries for Widgetbook - a widget library for Flutter.",
   "publisher": "LeanCode",
-  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leancodepl/widgetbook-entries-generator"
+  },
+  "bugs": {
+    "url": "https://github.com/leancodepl/widgetbook-entries-generator/issues",
+    "email": "pawel.jakubowski@leancode.pl"
+  },
   "version": "0.0.3",
   "engines": {
     "vscode": "^1.70.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "dart",
+    "flutter",
+    "widgetbook"
   ],
   "activationEvents": [
     "onLanguage:dart"
