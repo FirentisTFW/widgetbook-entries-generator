@@ -2,7 +2,9 @@ interface PathGenerator {
   prepareWidgetbookEntryFilePath(
     className: string,
     widgetFilePath: string
-  ): string | null;
+  ): string;
+
+  prepareWidgetbookWidgetsDirectoryPath(widgetFilePath: string): string;
 
   prepareCustomKnobsFilePath(currentPath: string): string | null;
 }

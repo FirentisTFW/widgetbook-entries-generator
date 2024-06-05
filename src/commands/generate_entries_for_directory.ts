@@ -3,7 +3,10 @@ import { FileContentGeneratorFactory } from "../generators/file_content/factory"
 import { PathGeneratorFactory } from "../generators/path/factory";
 import { CustomKnobsProvider } from "../providers/custom_knobs_provider";
 import { parseTextToClass } from "../util/dart_class_parser";
-import { writeWidgetbookEntry } from "../util/file_util";
+import {
+  createDirectoryIfNotExists,
+  writeWidgetbookEntry,
+} from "../util/file_util";
 import path = require("path");
 
 async function generateWidgetbookEntriesForDirectory(
@@ -36,6 +39,10 @@ async function generateWidgetbookEntriesForDirectory(
       const fileContentGenerator = FileContentGeneratorFactory.create(
         clazz,
         customKnobs
+      );
+
+      await createDirectoryIfNotExists(
+        pathGenerator.prepareWidgetbookWidgetsDirectoryPath(filePath)
       );
 
       await writeWidgetbookEntry(

@@ -40,6 +40,16 @@ async function writeWidgetbookEntry(
   await formatAndSaveFile(filePath);
 }
 
+async function createDirectoryIfNotExists(
+  directoryPath: string
+): Promise<void> {
+  const uri = vscode.Uri.file(directoryPath);
+
+  if (!existsSync(uri.fsPath)) {
+    await vscode.workspace.fs.createDirectory(uri);
+  }
+}
+
 async function showOverrideFileDialog(fileContent: string): Promise<boolean> {
   const yesOption = "YES";
   const noOption = `NO`;
@@ -92,4 +102,4 @@ function prepareWidgetbookEntry(
   return output;
 }
 
-export { writeWidgetbookEntry };
+export { createDirectoryIfNotExists, writeWidgetbookEntry };

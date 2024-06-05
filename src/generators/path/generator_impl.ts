@@ -7,19 +7,27 @@ class PathGeneratorImpl implements PathGenerator {
   prepareWidgetbookEntryFilePath(
     className: string,
     widgetFilePath: string
-  ): string | null {
-    const rootDirectory = Configuration.rootProjectDirectoryName();
-    const widgetbookWidgetsDirectory = Configuration.widgetsDirectoryPath();
+  ): string {
     const classNameSnakeCase = snakeCase(className);
-    const projectRootPath =
-      widgetFilePath.substringUpToAndIncluding(rootDirectory);
     const outputFilePath = path.join(
-      projectRootPath,
-      widgetbookWidgetsDirectory,
+      this.prepareWidgetbookWidgetsDirectoryPath(widgetFilePath),
       `${classNameSnakeCase}.dart`
     );
 
     return outputFilePath;
+  }
+
+  prepareWidgetbookWidgetsDirectoryPath(widgetFilePath: string): string {
+    const rootDirectory = Configuration.rootProjectDirectoryName();
+    const widgetbookWidgetsDirectory = Configuration.widgetsDirectoryPath();
+    const projectRootPath =
+      widgetFilePath.substringUpToAndIncluding(rootDirectory);
+    const outputDirectoryPath = path.join(
+      projectRootPath,
+      widgetbookWidgetsDirectory
+    );
+
+    return outputDirectoryPath;
   }
 
   prepareCustomKnobsFilePath(currentPath: string): string | null {
