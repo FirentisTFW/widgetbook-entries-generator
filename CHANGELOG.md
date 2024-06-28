@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.1.0
+
+- First public release.
+- Create widgets directory if it's not created yet when generating an entry.
+
 ## 0.0.3
 
 - Added support for Widgetbook 3.4.0 and its knobs.
