@@ -16,7 +16,7 @@ There is a set of predefined type-knob pairs. You can also **configure your own 
 
 ## Installation
 
-The extension can be installed from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=TODO).
+The extension can be installed from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=LeanCode.widgetbook-generator).
 
 ## Configuration
 
