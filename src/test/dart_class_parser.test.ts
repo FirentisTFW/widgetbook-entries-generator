@@ -10,6 +10,7 @@ import {
   parseLinesToClassFields,
   parseLinesToClassName,
   parseLinesToConstructor,
+  parseLinesToConstructors,
 } from "../util/dart_class_parser";
 import "../util/extensions";
 
@@ -652,6 +653,30 @@ describe("parseLinesToConstructor", () => {
           "small"
         )
       );
+    });
+  });
+});
+
+describe("parseLinesToConstructors", () => {
+  describe("factory constructor", () => {
+    test("without parameters", () => {
+      const lines = [
+        "  factory Loader.randomText() {",
+        "    return Loader.text(",
+        "      text: 'Random Text',",
+        "    );",
+        "  }",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(true, [], "randomText"),
+      ]);
     });
   });
 });

@@ -89,9 +89,23 @@ function parseLinesToConstructors(
       continue;
     }
 
+    const factoryConstructor = line.includes(`factory ${className}.`);
+
+    let openParenthesisCount = 0;
+    const openingParenthesisChar = factoryConstructor ? "(" : "{";
+    const closingParenthesisChar = factoryConstructor ? ")" : "}";
+
     for (let j = i; j < lines.length; j++) {
-      // If any issues are encountered, consider counting open and closed parenthesis to check whether constructor got closed
-      if (!isEndOfMainConstructorPart(lines[j])) continue;
+      // FIXME Possibly many occurrences in one line?
+      if (lines[j].includes(openingParenthesisChar)) {
+        openParenthesisCount++;
+      }
+      if (lines[j].includes(closingParenthesisChar)) {
+        openParenthesisCount--;
+      }
+      if (openParenthesisCount > 0) {
+        continue;
+      }
 
       const constructorContent = lines.slice(i, j + 1);
       const constructor = parseLinesToConstructor(
@@ -111,14 +125,9 @@ function parseLinesToConstructors(
 
 function isConstructorLine(line: string, className: string): boolean {
   return (
-    line.includes(`${className}(`) ||
-    (line.includes(`${className}.`) && line.includes("("))
-  );
-}
-
-function isEndOfMainConstructorPart(line: string): boolean {
-  return (
-    line.includes("});") || line.includes("}) :") || line.includes("})  :")
+    !line.includes(`return `) &&
+    (line.includes(`${className}(`) ||
+      (line.includes(`${className}.`) && line.includes("(")))
   );
 }
 
@@ -131,8 +140,8 @@ function parseLinesToConstructor(
   const classFieldReference = "this.";
   const nameLine = lines.shift() as string;
 
-  const isNamed = nameLine.includes(`${className}.`);
-  const constructorName = isNamed
+  const named = nameLine.includes(`${className}.`);
+  const constructorName = named
     ? nameLine.substring(nameLine.indexOf(".") + 1, nameLine.indexOf("("))
     : null;
 
@@ -236,5 +245,6 @@ export {
   parseLinesToClassFields,
   parseLinesToClassName,
   parseLinesToConstructor,
+  parseLinesToConstructors,
   parseTextToClass,
 };
