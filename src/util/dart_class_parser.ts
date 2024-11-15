@@ -156,12 +156,14 @@ function parseLinesToConstructor(
 
   const fields = fieldsLines
     .map((line) => {
+      // Check some possible cases that would discard this line as one representing a field.
+      if (line.includes("super.") || line.includes(") {")) return null;
+
       const positionType =
         fieldsLines.indexOf(line) > namedParametersStartIndex
           ? DartClassConstructorFieldPositionType.named
           : DartClassConstructorFieldPositionType.positional;
-      const custom =
-        !line.includes(classFieldReference) && !line.includes("super.");
+      const custom = !line.includes(classFieldReference);
 
       if (custom) {
         const lineParts = line.trim().split(" ");

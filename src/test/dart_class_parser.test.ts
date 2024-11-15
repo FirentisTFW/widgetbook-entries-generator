@@ -667,15 +667,68 @@ describe("parseLinesToConstructors", () => {
         "    );",
         "  }",
       ];
-      const classFields = [
-        new DartClassField("active", "bool"),
-        new DartClassField("semanticsLabel", "String"),
-        new DartClassField("text", "String"),
-        new DartClassField("icon", "IconData"),
-      ];
+      const classFields = [new DartClassField("icon", "IconData")];
 
       expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
         new DartClassConstructor(true, [], "randomText"),
+      ]);
+    });
+
+    test("with positional parameters", () => {
+      const lines = [
+        "  factory Loader.randomText(",
+        "    bool active,",
+        "    String label,",
+        "  ) {",
+        "    return Loader.text(",
+        "      text: 'Random Text',",
+        "    );",
+        "  }",
+      ];
+      const classFields = [new DartClassField("icon", "IconData")];
+
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(
+          true,
+          [
+            new DartClassConstructorField(
+              "active",
+              "bool",
+              DartClassConstructorFieldPositionType.positional
+            ),
+            new DartClassConstructorField(
+              "label",
+              "String",
+              DartClassConstructorFieldPositionType.positional
+            ),
+          ],
+          "randomText"
+        ),
+      ]);
+    });
+
+    test("with named parameters", () => {
+      const lines = [
+        "  factory Loader.randomText({",
+        "    required bool active,",
+        "    required String label,",
+        "  }) {",
+        "    return Loader.text(",
+        "      text: 'Random Text',",
+        "    );",
+        "  }",
+      ];
+      const classFields = [new DartClassField("icon", "IconData")];
+
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(
+          true,
+          [
+            new DartClassConstructorField("active", "bool"),
+            new DartClassConstructorField("label", "String"),
+          ],
+          "randomText"
+        ),
       ]);
     });
   });
