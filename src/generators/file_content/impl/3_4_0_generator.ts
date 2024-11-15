@@ -1,4 +1,3 @@
-import exp = require("constants");
 import { Configuration } from "../../../configuration/configuration";
 import { NumberKnobType } from "../../../configuration/enums/double_knob_type";
 import { FileContentGenerator3_2_0 } from "./3_2_0_generator";
