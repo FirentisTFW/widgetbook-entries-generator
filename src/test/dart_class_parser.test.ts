@@ -9,7 +9,6 @@ import {
   isConstructorLine,
   parseLinesToClassFields,
   parseLinesToClassName,
-  parseLinesToConstructor,
   parseLinesToConstructors,
 } from "../util/dart_class_parser";
 import "../util/extensions";
@@ -412,9 +411,9 @@ describe("isConstructorLine", () => {
   });
 });
 
-describe("parseLinesToConstructor", () => {
-  test("when passed an empty array, returns null", () => {
-    expect(parseLinesToConstructor([], "Loader", [])).toBe(null);
+describe("parseLinesToConstructors", () => {
+  test("when passed an empty array, returns an empty array", () => {
+    expect(parseLinesToConstructors([], "Loader", [])).toEqual([]);
   });
 
   describe("regular constructor", () => {
@@ -427,9 +426,9 @@ describe("parseLinesToConstructor", () => {
       ];
       const classFields = [new DartClassField("active", "bool")];
 
-      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
-        new DartClassConstructor(false, [], null)
-      );
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(false, [], null),
+      ]);
     });
 
     test("with named fields that are all class fields", () => {
@@ -448,7 +447,7 @@ describe("parseLinesToConstructor", () => {
         new DartClassField("icon", "IconData"),
       ];
 
-      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
         new DartClassConstructor(
           false,
           [
@@ -456,8 +455,8 @@ describe("parseLinesToConstructor", () => {
             new DartClassConstructorField("semanticsLabel", "String"),
           ],
           null
-        )
-      );
+        ),
+      ]);
     });
 
     // TODO Add support for one-line constructors and constructors without trailing comma
@@ -470,9 +469,9 @@ describe("parseLinesToConstructor", () => {
     //     new DartClassConstructorField("semanticsLabel", "String"),
     //   ];
 
-    //   expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+    //   expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
     //     new DartClassConstructor(false, classFields, null)
-    //   );
+    //   ]);
     // });
 
     test("with named fields of which some are class fields and some are custom fields", () => {
@@ -492,7 +491,7 @@ describe("parseLinesToConstructor", () => {
         new DartClassField("icon", "IconData"),
       ];
 
-      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
         new DartClassConstructor(
           false,
           [
@@ -502,8 +501,8 @@ describe("parseLinesToConstructor", () => {
             new DartClassConstructorField("animated", "bool"),
           ],
           null
-        )
-      );
+        ),
+      ]);
     });
 
     test("with positional fields and named fields", () => {
@@ -523,7 +522,7 @@ describe("parseLinesToConstructor", () => {
         new DartClassField("icon", "IconData"),
       ];
 
-      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
         new DartClassConstructor(
           false,
           [
@@ -537,8 +536,8 @@ describe("parseLinesToConstructor", () => {
             new DartClassConstructorField("animated", "bool"),
           ],
           null
-        )
-      );
+        ),
+      ]);
     });
   });
 
@@ -552,9 +551,9 @@ describe("parseLinesToConstructor", () => {
       ];
       const classFields = [new DartClassConstructorField("active", "bool")];
 
-      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
-        new DartClassConstructor(true, [], "small")
-      );
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(true, [], "small"),
+      ]);
     });
 
     test("with named fields that are all class fields", () => {
@@ -573,7 +572,7 @@ describe("parseLinesToConstructor", () => {
         new DartClassField("icon", "IconData"),
       ];
 
-      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
         new DartClassConstructor(
           true,
           [
@@ -581,8 +580,8 @@ describe("parseLinesToConstructor", () => {
             new DartClassConstructorField("semanticsLabel", "String"),
           ],
           "small"
-        )
-      );
+        ),
+      ]);
     });
 
     test("with named fields of which some are class fields and some are custom fields", () => {
@@ -602,7 +601,7 @@ describe("parseLinesToConstructor", () => {
         new DartClassField("icon", "IconData"),
       ];
 
-      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
         new DartClassConstructor(
           true,
           [
@@ -612,13 +611,13 @@ describe("parseLinesToConstructor", () => {
             new DartClassConstructorField("animated", "bool"),
           ],
           "small"
-        )
-      );
+        ),
+      ]);
     });
 
     test("with positional fields and named fields", () => {
       const lines = [
-        "  const Loader.small(",
+        "  Loader.small(",
         "    this.active,",
         "    this.semanticsLabel, {",
         "    super.key,",
@@ -633,7 +632,7 @@ describe("parseLinesToConstructor", () => {
         new DartClassField("icon", "IconData"),
       ];
 
-      expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
         new DartClassConstructor(
           true,
           [
@@ -651,13 +650,11 @@ describe("parseLinesToConstructor", () => {
             new DartClassConstructorField("animated", "bool"),
           ],
           "small"
-        )
-      );
+        ),
+      ]);
     });
   });
-});
 
-describe("parseLinesToConstructors", () => {
   describe("factory constructor", () => {
     test("without parameters", () => {
       const lines = [
