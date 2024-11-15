@@ -1,5 +1,8 @@
 import { camelCase } from "change-case";
-import { DartClassConstructor } from "../../../data/dart_class";
+import {
+  DartClassConstructor,
+  DartClassConstructorFieldPositionType,
+} from "../../../data/dart_class";
 import { BaseFileContentGenerator } from "../base_generator";
 
 class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
@@ -49,7 +52,7 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
     `;
 
     for (const field of constructor.fields) {
-      if (field.named) {
+      if (field.positionType == DartClassConstructorFieldPositionType.named) {
         output += `${field.name}: ${this.knobForField(field)},\n`;
       } else {
         output += `${this.knobForField(field)},\n`;

@@ -1,4 +1,9 @@
-import { DartClassConstructor, DartClassConstructorField, DartClassField } from "../data/dart_class";
+import {
+  DartClassConstructor,
+  DartClassConstructorField,
+  DartClassConstructorFieldPositionType,
+  DartClassField,
+} from "../data/dart_class";
 import {
   doesLookingFurtherMakeSense,
   isConstructorLine,
@@ -435,15 +440,22 @@ describe("parseLinesToConstructor", () => {
         "  })",
       ];
       const classFields = [
-        new DartClassConstructorField("active", "bool"),
-        new DartClassConstructorField("semanticsLabel", "String"),
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
         // class can have more fields which are not in the main constructor part because they are in its initializer list
-        new DartClassConstructorField("text", "String"),
-        new DartClassConstructorField("icon", "IconData"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
       ];
 
       expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
-        new DartClassConstructor(false, [classFields[0], classFields[1]], null)
+        new DartClassConstructor(
+          false,
+          [
+            new DartClassConstructorField("active", "bool"),
+            new DartClassConstructorField("semanticsLabel", "String"),
+          ],
+          null
+        )
       );
     });
 
@@ -473,18 +485,18 @@ describe("parseLinesToConstructor", () => {
         "  })",
       ];
       const classFields = [
-        new DartClassConstructorField("active", "bool"),
-        new DartClassConstructorField("semanticsLabel", "String"),
-        new DartClassConstructorField("text", "String"),
-        new DartClassConstructorField("icon", "IconData"),
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
       ];
 
       expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
         new DartClassConstructor(
           false,
           [
-            classFields[0],
-            classFields[1],
+            new DartClassConstructorField("active", "bool"),
+            new DartClassConstructorField("semanticsLabel", "String"),
             new DartClassConstructorField("big", "bool"),
             new DartClassConstructorField("animated", "bool"),
           ],
@@ -504,18 +516,22 @@ describe("parseLinesToConstructor", () => {
         "  })",
       ];
       const classFields = [
-        new DartClassConstructorField("active", "bool"),
-        new DartClassConstructorField("semanticsLabel", "String"),
-        new DartClassConstructorField("text", "String"),
-        new DartClassConstructorField("icon", "IconData"),
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
       ];
 
       expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
         new DartClassConstructor(
           false,
           [
-            classFields[0],
-            classFields[1],
+            new DartClassConstructorField(
+              "active",
+              "bool",
+              DartClassConstructorFieldPositionType.positional
+            ),
+            new DartClassConstructorField("semanticsLabel", "String"),
             new DartClassConstructorField("big", "bool"),
             new DartClassConstructorField("animated", "bool"),
           ],
@@ -549,17 +565,20 @@ describe("parseLinesToConstructor", () => {
         "  }) : big = false,",
       ];
       const classFields = [
-        new DartClassConstructorField("active", "bool"),
-        new DartClassConstructorField("semanticsLabel", "String"),
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
         // class can have more fields which are not in the main constructor part because they are in its initializer list
-        new DartClassConstructorField("text", "String"),
-        new DartClassConstructorField("icon", "IconData"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
       ];
 
       expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
         new DartClassConstructor(
           true,
-          [classFields[0], classFields[1]],
+          [
+            new DartClassConstructorField("active", "bool"),
+            new DartClassConstructorField("semanticsLabel", "String"),
+          ],
           "small"
         )
       );
@@ -576,18 +595,18 @@ describe("parseLinesToConstructor", () => {
         "  })",
       ];
       const classFields = [
-        new DartClassConstructorField("active", "bool"),
-        new DartClassConstructorField("semanticsLabel", "String"),
-        new DartClassConstructorField("text", "String"),
-        new DartClassConstructorField("icon", "IconData"),
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
       ];
 
       expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
         new DartClassConstructor(
           true,
           [
-            classFields[0],
-            classFields[1],
+            new DartClassConstructorField("active", "bool"),
+            new DartClassConstructorField("semanticsLabel", "String"),
             new DartClassConstructorField("big", "bool"),
             new DartClassConstructorField("animated", "bool"),
           ],
@@ -596,30 +615,37 @@ describe("parseLinesToConstructor", () => {
       );
     });
 
-
     test("with positional fields and named fields", () => {
       const lines = [
         "  const Loader.small(",
-        "    this.active, {",
+        "    this.active,",
+        "    this.semanticsLabel, {",
         "    super.key,",
-        "    this.semanticsLabel,",
         "    bool big = false,",
         "    required bool animated,",
         "  })",
       ];
       const classFields = [
-        new DartClassConstructorField("active", "bool"),
-        new DartClassConstructorField("semanticsLabel", "String"),
-        new DartClassConstructorField("text", "String"),
-        new DartClassConstructorField("icon", "IconData"),
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
       ];
 
       expect(parseLinesToConstructor(lines, "Loader", classFields)).toEqual(
         new DartClassConstructor(
           true,
           [
-            classFields[0],
-            classFields[1],
+            new DartClassConstructorField(
+              "active",
+              "bool",
+              DartClassConstructorFieldPositionType.positional
+            ),
+            new DartClassConstructorField(
+              "semanticsLabel",
+              "String",
+              DartClassConstructorFieldPositionType.positional
+            ),
             new DartClassConstructorField("big", "bool"),
             new DartClassConstructorField("animated", "bool"),
           ],

@@ -30,12 +30,22 @@ class DartClassConstructorField extends DartClassField {
   constructor(
     public name: string,
     public type: string,
-    public nullable = false,
-    public named = true,
+    public positionType = DartClassConstructorFieldPositionType.named,
+    public nullable = false
   ) {
     super(name, type, nullable);
   }
 }
 
-export { DartClass, DartClassConstructor, DartClassConstructorField, DartClassField };
+enum DartClassConstructorFieldPositionType {
+  named,
+  positional,
+}
 
+export {
+  DartClass,
+  DartClassConstructor,
+  DartClassConstructorField,
+  DartClassConstructorFieldPositionType,
+  DartClassField,
+};
