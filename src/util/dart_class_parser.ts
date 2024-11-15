@@ -1,6 +1,7 @@
 import {
   DartClass,
   DartClassConstructor,
+  DartClassConstructorField,
   DartClassField,
 } from "../data/dart_class";
 
@@ -133,36 +134,40 @@ function parseLinesToConstructor(
   const constructorName = isNamed
     ? nameLine.substring(nameLine.indexOf(".") + 1, nameLine.indexOf("("))
     : null;
+  const namedParametersStartIndex = lines.findIndex((line) =>
+    line.includes("{")
+  );
 
   const fieldsLines = lines
     .join("")
     .split(",")
     // TODO Modify the line below when adding support for one-line constructors
     .filter((line) => line !== "" && !line.includes("})"));
-  const classFieldsLines = fieldsLines.filter((line) =>
-    line.includes(classFieldReference)
+
+  const positionalClassFieldsLines = fieldsLines.filter(
+    (line) =>
+      line.includes(classFieldReference) &&
+      fieldsLines.indexOf(line) <= namedParametersStartIndex
+  );
+  const namedClassFieldsLines = fieldsLines.filter(
+    (line) =>
+      line.includes(classFieldReference) &&
+      fieldsLines.indexOf(line) > namedParametersStartIndex
   );
 
-  const classFieldsNames = classFieldsLines.map((line) => {
-    const lineFromFieldName = line.substringAfter(classFieldReference);
-    const hasDefaultValue = lineFromFieldName.includes(" = ");
-    if (hasDefaultValue) {
-      return lineFromFieldName.substring(0, lineFromFieldName.indexOf(" = "));
-    }
-    return lineFromFieldName;
-  });
-
-  const classFields = classFieldsNames
-    .map((fieldName) =>
-      allClassFields.find((field) => field.name === fieldName)
-    )
-    .whereType<DartClassField>();
+  const classFields = getConstructorClassFields(
+    positionalClassFieldsLines,
+    namedClassFieldsLines,
+    allClassFields
+  );
 
   const customFieldsLines = fieldsLines.filter(
     (line) => !line.includes(classFieldReference) && !line.includes("super.")
   );
 
   const customFields = customFieldsLines.map((line) => {
+    const named = lines.indexOf(line) > namedParametersStartIndex;
+
     const lineParts = line.trim().split(" ");
     let name: string;
     let type: string;
@@ -175,10 +180,15 @@ function parseLinesToConstructor(
     }
 
     if (type.endsWith("?")) {
-      return new DartClassField(name, type.removeTrailing(1), true);
+      return new DartClassConstructorField(
+        name,
+        type.removeTrailing(1),
+        true,
+        named
+      );
     }
 
-    return new DartClassField(name, type);
+    return new DartClassConstructorField(name, type, false, named);
   });
 
   return new DartClassConstructor(
@@ -186,6 +196,69 @@ function parseLinesToConstructor(
     [...classFields, ...customFields],
     constructorName
   );
+}
+
+function getConstructorClassFields(
+  positionalClassFieldsLines: Array<string>,
+  namedClassFieldsLines: Array<string>,
+  allClassFields: Array<DartClassField>
+): Array<DartClassConstructorField> {
+  const classFieldReference = "this.";
+
+  const positionalClassFieldsNames = getClassFieldNames(
+    positionalClassFieldsLines,
+    classFieldReference
+  );
+  const namedClassFieldsNames = getClassFieldNames(
+    namedClassFieldsLines,
+    classFieldReference
+  );
+
+  const positionalClassFields = positionalClassFieldsNames
+    .map((fieldName) =>
+      allClassFields.find((field) => field.name === fieldName)
+    )
+    .whereType<DartClassField>()
+    .map((field) => {
+      return classFieldToConstructorField(field, false);
+    });
+
+  const namedClassFields = namedClassFieldsNames
+    .map((fieldName) =>
+      allClassFields.find((field) => field.name === fieldName)
+    )
+    .whereType<DartClassField>()
+    .map((field) => {
+      return classFieldToConstructorField(field, true);
+    });
+
+  return [...namedClassFields, ...positionalClassFields];
+}
+
+function classFieldToConstructorField(
+  classField: DartClassField,
+  named: boolean
+): DartClassConstructorField {
+  return new DartClassConstructorField(
+    classField.name,
+    classField.type,
+    classField.nullable,
+    named
+  );
+}
+
+function getClassFieldNames(
+  lines: Array<string>,
+  classFieldReference: string
+): Array<string> {
+  return lines.map((line) => {
+    const lineFromFieldName = line.substringAfter(classFieldReference);
+    const hasDefaultValue = lineFromFieldName.includes(" = ");
+    if (hasDefaultValue) {
+      return lineFromFieldName.substring(0, lineFromFieldName.indexOf(" = "));
+    }
+    return lineFromFieldName;
+  });
 }
 
 function doesLookingFurtherMakeSense(line: string): boolean {

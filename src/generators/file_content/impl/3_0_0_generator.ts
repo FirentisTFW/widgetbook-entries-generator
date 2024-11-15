@@ -49,7 +49,11 @@ class FileContentGenerator3_0_0 extends BaseFileContentGenerator {
     `;
 
     for (const field of constructor.fields) {
-      output += `${field.name}: ${this.knobForField(field)},\n`;
+      if (field.named) {
+        output += `${field.name}: ${this.knobForField(field)},\n`;
+      } else {
+        output += `${this.knobForField(field)},\n`;
+      }
     }
 
     output += `

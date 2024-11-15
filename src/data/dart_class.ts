@@ -9,7 +9,7 @@ class DartClass {
 class DartClassConstructor {
   constructor(
     public named: boolean,
-    public fields: Array<DartClassField>,
+    public fields: Array<DartClassConstructorField>,
     public name: string | null
   ) {}
 
@@ -26,4 +26,16 @@ class DartClassField {
   ) {}
 }
 
-export { DartClass, DartClassConstructor, DartClassField };
+class DartClassConstructorField extends DartClassField {
+  constructor(
+    public name: string,
+    public type: string,
+    public nullable = false,
+    public named = true,
+  ) {
+    super(name, type, nullable);
+  }
+}
+
+export { DartClass, DartClassConstructor, DartClassConstructorField, DartClassField };
+
