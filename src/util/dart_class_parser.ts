@@ -131,7 +131,7 @@ function parseLinesToConstructor(
 
   const isNamed = nameLine.includes(`${className}.`);
   const constructorName = isNamed
-    ? nameLine.substring(nameLine.indexOf(".") + 1, nameLine.indexOf("({"))
+    ? nameLine.substring(nameLine.indexOf(".") + 1, nameLine.indexOf("("))
     : null;
 
   const fieldsLines = lines
