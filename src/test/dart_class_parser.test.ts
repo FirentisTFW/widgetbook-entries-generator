@@ -539,6 +539,79 @@ describe("parseLinesToConstructors", () => {
         ),
       ]);
     });
+
+    test("with assert at the end", () => {
+      const lines = [
+        "  const Loader(",
+        "    this.active, {",
+        "    super.key,",
+        "    this.semanticsLabel,",
+        "    bool big = false,",
+        "    required bool animated,",
+        "  }) : assert(animated || big);",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(
+          false,
+          [
+            new DartClassConstructorField(
+              "active",
+              "bool",
+              DartClassConstructorFieldPositionType.positional
+            ),
+            new DartClassConstructorField("semanticsLabel", "String"),
+            new DartClassConstructorField("big", "bool"),
+            new DartClassConstructorField("animated", "bool"),
+          ],
+          null
+        ),
+      ]);
+    });
+
+    test("with multiline assert with message at the end", () => {
+      const lines = [
+        "  const Loader(",
+        "    this.active, {",
+        "    super.key,",
+        "    this.semanticsLabel,",
+        "    bool big = false,",
+        "    required bool animated,",
+        "  }) : assert(",
+        "          animated || big,",
+        "          'Either animated or big',",
+        "        );",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(
+          false,
+          [
+            new DartClassConstructorField(
+              "active",
+              "bool",
+              DartClassConstructorFieldPositionType.positional
+            ),
+            new DartClassConstructorField("semanticsLabel", "String"),
+            new DartClassConstructorField("big", "bool"),
+            new DartClassConstructorField("animated", "bool"),
+          ],
+          null
+        ),
+      ]);
+    });
   });
 
   describe("named constructor", () => {
