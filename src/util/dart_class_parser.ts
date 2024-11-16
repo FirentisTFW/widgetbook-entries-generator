@@ -69,7 +69,12 @@ function parseLinesToClassFields(input: Array<string>): Array<DartClassField> {
 
 function parseLinesToClassName(lines: Array<string>): string {
   // TODO What about class modifiers? Are they used in widgets too?
-  return lines.find((line) => line.startsWith("class "))?.split(" ")[1] ?? "";
+  return (
+    lines
+      .find((line) => line.startsWith("class "))
+      ?.split(" ")[1]
+      ?.substringUpTo("<") ?? ""
+  );
 }
 
 function parseLinesToConstructors(
@@ -92,14 +97,11 @@ function parseLinesToConstructors(
     let openParenthesisCount = 0;
 
     for (let j = i; j < lines.length; j++) {
-      // FIXME Possibly many occurrences in one line?
-      if (lines[j].includes("(")) {
-        openParenthesisCount++;
+      for (const char of lines[j]) {
+        if (char === "(") openParenthesisCount++;
+        else if (char === ")") openParenthesisCount--;
       }
-      if (lines[j].includes(")")) {
-        openParenthesisCount--;
-      }
-      if (openParenthesisCount > 0) {
+      if (openParenthesisCount > 0 && !lines[j].includes("assert(")) {
         continue;
       }
 
