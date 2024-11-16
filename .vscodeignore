@@ -10,4 +10,4 @@ vsc-extension-quickstart.md
 **/*.ts
 node_modules
 out/*.map
-demo_gifs/**
+demo_assets/**
