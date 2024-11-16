@@ -128,7 +128,11 @@ function parseLinesToConstructors(
     for (let j = i; j < lines.length; j++) {
       for (const char of lines[j]) {
         if (char === "(") openParenthesisCount++;
-        else if (char === ")") openParenthesisCount--;
+        else if (char === ")") {
+          openParenthesisCount--;
+          // Exit as soon as the initial parenthesis block is closed.
+          if (openParenthesisCount == 0) break;
+        }
       }
       if (openParenthesisCount > 0 && !lines[j].includes("assert(")) {
         continue;
@@ -165,7 +169,21 @@ function parseLinesToConstructor(
 ): DartClassConstructor | null {
   if (!lines.length) return null;
   const classFieldReference = "this.";
+  let namedParametersStartIndex = lines.findIndex((line) => line.includes("{"));
+  if (namedParametersStartIndex === -1) {
+    // No named params. Set to infinity for the check for positionType below.
+    namedParametersStartIndex = Infinity;
+  } else {
+    // Index will change after we pop name line below.
+    namedParametersStartIndex--;
+  }
+
   const nameLine = lines.shift() as string;
+
+  if (lines.length > 0) {
+    // Remove constructor ending. No field would be defined in this line.
+    lines.pop();
+  }
 
   const named = nameLine.includes(`${className}.`);
   const constructorName = named
@@ -177,14 +195,16 @@ function parseLinesToConstructor(
     .split(",")
     // TODO Modify the line below when adding support for one-line constructors
     .filter((line) => line !== "" && !line.includes("})"));
-  const namedParametersStartIndex = fieldsLines.findIndex((line) =>
-    line.includes("{")
-  );
 
   const fields = fieldsLines
     .map((line) => {
       // Check some possible cases that would discard this line as one representing a field.
-      if (line.includes("super.") || line.includes(") {")) return null;
+      if (
+        line.includes("super.") ||
+        line.includes(") {") ||
+        line.includes("})")
+      )
+        return null;
 
       const positionType =
         fieldsLines.indexOf(line) > namedParametersStartIndex
@@ -193,27 +213,7 @@ function parseLinesToConstructor(
       const custom = !line.includes(classFieldReference);
 
       if (custom) {
-        const lineParts = line.trim().split(" ");
-        let name: string;
-        let type: string;
-        if (lineParts[0] === "required") {
-          name = lineParts[2];
-          type = lineParts[1];
-        } else {
-          name = lineParts[1];
-          type = lineParts[0];
-        }
-
-        if (type.endsWith("?")) {
-          return new DartClassConstructorField(
-            name,
-            type.removeTrailing(1),
-            positionType,
-            true
-          );
-        }
-
-        return new DartClassConstructorField(name, type, positionType, false);
+        return getCustomConstructorField(line, positionType);
       } else {
         const fieldName = getClassFieldName(line, classFieldReference);
         const classField = allClassFields.find(
@@ -234,6 +234,33 @@ function parseLinesToConstructor(
     fields,
     constructorName
   );
+}
+
+function getCustomConstructorField(
+  line: string,
+  positionType: DartClassConstructorFieldPositionType
+): DartClassConstructorField {
+  const lineParts = line.trim().split(" ");
+  let name: string;
+  let type: string;
+  if (lineParts[0] === "required") {
+    name = lineParts[2];
+    type = lineParts[1];
+  } else {
+    name = lineParts[1];
+    type = lineParts[0];
+  }
+
+  if (type.endsWith("?")) {
+    return new DartClassConstructorField(
+      name,
+      type.removeTrailing(1),
+      positionType,
+      true
+    );
+  }
+
+  return new DartClassConstructorField(name, type, positionType, false);
 }
 
 function classFieldToConstructorField(

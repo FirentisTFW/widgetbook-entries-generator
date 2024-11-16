@@ -726,6 +726,39 @@ describe("parseLinesToConstructors", () => {
         ),
       ]);
     });
+
+    test("with complicated expressions in initializer list", () => {
+      const lines = [
+        "  Loader.small(",
+        "    this.active, {",
+        "    super.key,",
+        "    bool big = false,",
+        "    required bool animated,",
+        "  }) : semanticsLabel = List.filled(40, '*').join()",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(
+          true,
+          [
+            new DartClassConstructorField(
+              "active",
+              "bool",
+              DartClassConstructorFieldPositionType.positional
+            ),
+            new DartClassConstructorField("big", "bool"),
+            new DartClassConstructorField("animated", "bool"),
+          ],
+          "small"
+        ),
+      ]);
+    });
   });
 
   describe("factory constructor", () => {
