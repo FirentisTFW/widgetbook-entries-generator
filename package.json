@@ -35,7 +35,7 @@
       },
       {
         "command": "widgetbook-generator.generate.directory",
-        "title": "Widgetbook: generate entry for each file in the directory"
+        "title": "Widgetbook: generate entry for each widget in the directory"
       }
     ],
     "configuration": [

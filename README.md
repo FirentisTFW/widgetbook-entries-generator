@@ -49,7 +49,7 @@ Put the cursor on the line with class name declaration, press a shortcut for `Qu
 
 ### Generating Widgetbook Entries for the Entire Widget Directory
 
-In VSCode explorer, right-click on the directory that contains widgets for which you want to generate entries, then select `Widgetbook: generate entry for each file in the directory`. The extension will generate a new file with widgetbook entries for each of the files in the directory. If the directory contains subdirectories, the extension will also generate entries for them
+In VSCode explorer, right-click on the directory that contains widgets for which you want to generate entries, then select `Widgetbook: generate entry for each widget in the directory`. The extension will generate a new file with widgetbook entries for each of the widgets in the directory. If the directory contains subdirectories, the extension will also generate entries for them.
 
 **Note**: This feature is currently experimental and may require adjustments. We're working on making it stable.
 
