@@ -45,6 +45,8 @@ Those settings are purely project specific. If you work on multiple projects at 
 }
 ```
 
+If you want to see a complete usage example in a real application (along with `settings.json` file), you can have a look at the [example project](https://github.com/FirentisTFW/widgetbook-vsc-extension-example-project) and its README.
+
 ## Usage
 
 Before using the extension to generate files, make sure you've configured your extension before by following steps described in [Configuration](#configuration). Also, make sure the code meets the [requirements](#requirements).
@@ -117,7 +119,7 @@ Since the project is still in very early stage of development, some rules need t
 
 3. Code must use 2 spaces for indents (this is a default setting in Flutter).
 
-## Current known limitations
+## Current Known Limitations
 
 1. Single-line constructors are not supported. If you need to generate a use-case for a single-line constructor, convert it into a multi-line constructor.
 
