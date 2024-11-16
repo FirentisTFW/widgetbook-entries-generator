@@ -29,6 +29,8 @@ async function generateWidgetbookEntriesForDirectory(
 
       const clazz = parseTextToClass(fileContentString);
 
+      if (!clazz) return;
+
       const pathGenerator = PathGeneratorFactory.create();
       const customKnobsFilePath = pathGenerator.prepareCustomKnobsFilePath(
         uri.path

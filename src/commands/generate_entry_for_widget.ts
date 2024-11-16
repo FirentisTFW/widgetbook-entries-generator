@@ -21,6 +21,8 @@ async function generateWidgetbookEntryForWidgetInScope(): Promise<void> {
 
   const clazz = parseTextToClass(fileContentFromCurrentLine);
 
+  if (!clazz) return;
+
   const pathGenerator = PathGeneratorFactory.create();
   const customKnobsFilePath = pathGenerator.prepareCustomKnobsFilePath(
     activeEditor.document.uri.path

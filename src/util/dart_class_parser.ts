@@ -6,14 +6,17 @@ import {
   DartClassField,
 } from "../data/dart_class";
 
-function parseTextToClass(text: string): DartClass {
+function parseTextToClass(text: string): DartClass | null {
   const lines = text.split("\n").filter((line) => line !== "");
 
   const classFields = parseLinesToClassFields(lines);
   const className = parseLinesToClassName(lines);
-  const construtors = parseLinesToConstructors(lines, className, classFields);
 
-  const clazz = new DartClass(className, classFields, construtors);
+  if (className === "") return null;
+
+  const constructors = parseLinesToConstructors(lines, className, classFields);
+
+  const clazz = new DartClass(className, classFields, constructors);
 
   return clazz;
 }
