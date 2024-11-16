@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { CodeAction, CodeActionKind } from "vscode";
+import { doesLineContainClassDeclaration } from "../util/dart_class_parser";
 import "../util/extensions";
 
 class WidgetbookEntriesCodeActions implements vscode.CodeActionProvider {
@@ -31,10 +32,7 @@ class WidgetbookEntriesCodeActions implements vscode.CodeActionProvider {
     const currentLine = activeEditor.document.lineAt(lineIndex).text;
     const lineBelow = activeEditor.document.lineAt(lineIndex + 1).text;
 
-    return (
-      currentLine.includes("class") &&
-      (currentLine.includes("Widget") || lineBelow.includes("Widget"))
-    );
+    return doesLineContainClassDeclaration(currentLine, lineBelow);
   }
 }
 

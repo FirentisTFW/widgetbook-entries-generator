@@ -9,11 +9,11 @@ import {
 function parseTextToClass(text: string): DartClass | null {
   const lines = text.split("\n").filter((line) => line !== "");
 
-  const classFields = parseLinesToClassFields(lines);
   const className = parseLinesToClassName(lines);
 
   if (className === "") return null;
 
+  const classFields = parseLinesToClassFields(lines);
   const constructors = parseLinesToConstructors(lines, className, classFields);
 
   const clazz = new DartClass(className, classFields, constructors);
@@ -71,13 +71,16 @@ function parseLinesToClassFields(input: Array<string>): Array<DartClassField> {
 }
 
 function parseLinesToClassName(lines: Array<string>): string {
-  // TODO What about class modifiers? Are they used in widgets too?
-  return (
-    lines
-      .find((line) => line.startsWith("class "))
-      ?.split(" ")[1]
-      ?.substringUpTo("<") ?? ""
-  );
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const nextLine = i < lines.length - 1 ? lines[i + 1] : "";
+
+    if (doesLineContainClassDeclaration(line, nextLine)) {
+      return line?.split(" ")[1]?.substringUpTo("<") ?? "";
+    }
+  }
+
+  return "";
 }
 
 function parseLinesToConstructors(
@@ -242,7 +245,18 @@ function removeComments(lines: Array<string>): Array<string> {
   return lines.filter((line) => !line.trim().startsWith("//"));
 }
 
+function doesLineContainClassDeclaration(
+  line: string,
+  lineBelow: string
+): boolean {
+  return (
+    line.includes("class ") &&
+    (line.includes("Widget") || lineBelow.includes("Widget"))
+  );
+}
+
 export {
+  doesLineContainClassDeclaration,
   doesLookingFurtherMakeSense,
   isConstructorLine,
   parseLinesToClassFields,
