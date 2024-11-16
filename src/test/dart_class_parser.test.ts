@@ -459,6 +459,41 @@ describe("parseLinesToConstructors", () => {
       ]);
     });
 
+    test("with only positional fields that are all class fields", () => {
+      const lines = [
+        "  const Loader(",
+        "    this.active,",
+        "    this.semanticsLabel,",
+        "  )",
+      ];
+      const classFields = [
+        new DartClassField("active", "bool"),
+        new DartClassField("semanticsLabel", "String"),
+        // class can have more fields which are not in the main constructor part because they are in its initializer list
+        new DartClassField("text", "String"),
+        new DartClassField("icon", "IconData"),
+      ];
+
+      expect(parseLinesToConstructors(lines, "Loader", classFields)).toEqual([
+        new DartClassConstructor(
+          false,
+          [
+            new DartClassConstructorField(
+              "active",
+              "bool",
+              DartClassConstructorFieldPositionType.positional
+            ),
+            new DartClassConstructorField(
+              "semanticsLabel",
+              "String",
+              DartClassConstructorFieldPositionType.positional
+            ),
+          ],
+          null
+        ),
+      ]);
+    });
+
     // TODO Add support for one-line constructors and constructors without trailing comma
     // test("all parameters in one line", () => {
     //   const lines = [
