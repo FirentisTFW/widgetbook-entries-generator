@@ -22,7 +22,13 @@ String.prototype.substringBetween = function (start: string, end: string) {
 };
 
 String.prototype.substringUpTo = function (text: string) {
-  return this.substring(0, this.indexOf(text));
+  const indexOfText = this.indexOf(text);
+
+  if (indexOfText === -1) {
+    return this as string;
+  } else {
+    return this.substring(0, indexOfText);
+  }
 };
 
 String.prototype.substringUpToAndIncluding = function (text: string) {
