@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { FileContentGeneratorFactory } from "../generators/file_content/factory";
 import { PathGeneratorFactory } from "../generators/path/factory";
 import { CustomKnobsProvider } from "../providers/custom_knobs_provider";
-import { parseTextToClass } from "../util/dart_class_parser";
+import { parseTextToClasses } from "../util/dart_class_parser";
 import {
   createDirectoryIfNotExists,
   writeWidgetbookEntry,
@@ -19,33 +19,33 @@ async function generateWidgetbookEntryForWidgetInScope(): Promise<void> {
     .slice(currentLineIndex)
     .join("\n");
 
-  const clazz = parseTextToClass(fileContentFromCurrentLine);
+  const classes = parseTextToClasses(fileContentFromCurrentLine);
 
-  if (!clazz) return;
+  for (const clazz of classes) {
+    const pathGenerator = PathGeneratorFactory.create();
+    const customKnobsFilePath = pathGenerator.prepareCustomKnobsFilePath(
+      activeEditor.document.uri.path
+    );
+    const customKnobs = await new CustomKnobsProvider().getCustomKnobs(
+      customKnobsFilePath
+    );
+    const fileContentGenerator = FileContentGeneratorFactory.create(
+      clazz,
+      customKnobs
+    );
+    const filePath = activeEditor.document.fileName;
 
-  const pathGenerator = PathGeneratorFactory.create();
-  const customKnobsFilePath = pathGenerator.prepareCustomKnobsFilePath(
-    activeEditor.document.uri.path
-  );
-  const customKnobs = await new CustomKnobsProvider().getCustomKnobs(
-    customKnobsFilePath
-  );
-  const fileContentGenerator = FileContentGeneratorFactory.create(
-    clazz,
-    customKnobs
-  );
-  const filePath = activeEditor.document.fileName;
+    await createDirectoryIfNotExists(
+      pathGenerator.prepareWidgetbookWidgetsDirectoryPath(filePath)
+    );
 
-  await createDirectoryIfNotExists(
-    pathGenerator.prepareWidgetbookWidgetsDirectoryPath(filePath)
-  );
-
-  await writeWidgetbookEntry(
-    clazz,
-    filePath,
-    pathGenerator,
-    fileContentGenerator
-  );
+    await writeWidgetbookEntry(
+      clazz,
+      filePath,
+      pathGenerator,
+      fileContentGenerator
+    );
+  }
 }
 
 export { generateWidgetbookEntryForWidgetInScope };

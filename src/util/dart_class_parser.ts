@@ -6,12 +6,35 @@ import {
   DartClassField,
 } from "../data/dart_class";
 
-function parseTextToClass(text: string): DartClass | null {
+function parseTextToClasses(text: string): Array<DartClass> {
   const lines = text.split("\n").filter((line) => line !== "");
 
+  const classes: Array<DartClass> = [];
+
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (doesLineContainClassDeclaration(line, lines[i + 1])) {
+      const endLineIndex =
+        lines.slice(i).findIndex((line) => line.startsWith("}")) + i;
+
+      const classLines = lines.slice(i, endLineIndex);
+      const clazz = parseTextToClass(classLines);
+      if (clazz) classes.push(clazz);
+      i = endLineIndex + 1;
+    } else {
+      i++;
+    }
+  }
+
+  return classes;
+}
+
+function parseTextToClass(lines: Array<string>): DartClass | null {
   const className = parseLinesToClassName(lines);
 
-  if (className === "") return null;
+  // Discard private widgets.
+  if (className === "" || className.startsWith("_")) return null;
 
   const classFields = parseLinesToClassFields(lines);
   const constructors = parseLinesToConstructors(lines, className, classFields);
@@ -264,4 +287,5 @@ export {
   parseLinesToConstructor,
   parseLinesToConstructors,
   parseTextToClass,
+  parseTextToClasses,
 };
