@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.2.0
+
+- Added multiple fixes and improvements to the widget parsing logic, including:
+  - Factory constructors support,
+  - Positional parameters support,
+  - Constructors with assertions support.
+  - Multiple classes in one line support.
+- Added proper error handling.
+- Removed parsing of not-widget classes (encoutered during use-case generation for the whole widget directory).
+- Updated README to give more details on the setup part.
+
 ## 0.1.0
 
 - First public release.
