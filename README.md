@@ -61,6 +61,8 @@ In VSCode explorer, right-click on the directory that contains widgets for which
 
 **Note**: This feature is currently experimental and may require adjustments. We're working on making it stable.
 
+**Note**: After generating the components, remember to add them to `directories` parameter in your `WidgetbookApp` widget.
+
 ## Custom Knobs
 
 The extension allows for adding custom knobs for specified types (e.g. your custom widgets/enums that you want to handle differently). These custom knobs can also override knobs predefined by the extension.
