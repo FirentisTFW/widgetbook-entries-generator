@@ -80,10 +80,11 @@
             "enum": [
               "3.0.0",
               "3.2.0",
-              "3.4.0"
+              "3.4.0",
+              "Latest"
             ],
-            "default": "3.4.0",
-            "description": "Widgetbook version defined in your pubspec file."
+            "default": "Latest",
+            "description": "Widgetbook version defined in your pubspec file. If your version is newer than the latest version in the dropdown, select the latest version."
           },
           "widgetbook-generator.widgetsDirectoryPath": {
             "type": "string",
