@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.2.1
+
+- Added "Latest" option in Widgetbook version dropdown.
+- Added a gif of generating multiple widgetbook entries to the README.
+
 ## 0.2.0
 
 - Added multiple fixes and improvements to the widget parsing logic, including:
