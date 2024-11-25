@@ -61,6 +61,8 @@ In VSCode explorer, right-click on the directory that contains widgets for which
 
 **Note**: This feature is currently experimental and may require adjustments. We're working on making it stable.
 
+![multiple use-cases generation demo](https://raw.githubusercontent.com/leancodepl/widgetbook-entries-generator/main/demo_assets/generate_multiple_widgetbook_entries_preview.gif)
+
 **Note**: After generating the components, remember to add them to `directories` parameter in your `WidgetbookApp` widget.
 
 ## Custom Knobs
